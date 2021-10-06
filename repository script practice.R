@@ -1,3 +1,6 @@
 a <- c("This", "Is", "My", "New", "Code")
 
-2 + 2
+b <- 2 + 2
+
+print(a)
+
