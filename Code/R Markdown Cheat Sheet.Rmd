@@ -10,7 +10,7 @@ output:
     toc_depth: 3
 ---
 
-# THE TASK
+# The Task
 
 Using RMarkdown, summarize the most important bits of what you have learned so far(Week 1 and Week 2) - i.e. make a sort of cheat sheet for yourself of useful functions or insights. This will be different for everyone, so I won’t tell you what to put on it but I do suggest you include a table of useful functions which you have come across during your reading.
 
