@@ -1,3 +1,7 @@
+<div align="center" width="100%">
+    <img src=".\github_pic.png" width="250" alt="" />
+</div>
+
 # Bioinformatics
 This repository is for storing all of the data and code for my Bioinformatics course. 
 
