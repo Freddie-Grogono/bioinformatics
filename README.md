@@ -10,6 +10,9 @@ Freddie Grogono
 
 The data for the following workshops has been taken from [Chris Clements GitHub](https://github.com/chrit88)
 
+<div align="center" width="100%">
+    <img src=".\matrix code.jpg" width="250" alt="" />
+</div>
 ## Code
 The following links will take you to code that has been created thus far in the course:
 
