@@ -13,7 +13,9 @@ The data for the following workshops has been taken from [Chris Clements GitHub]
 
 
 
-## Code <div align="center" width="100%">
+## Code
+
+<div align="center" width="100%">
     <img src=".\Images\matrix code.jpg" width="400" alt="" />
 </div>
 
