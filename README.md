@@ -17,7 +17,7 @@ To get to the **Week 2 R Markdown** [Click Here](Code/R%20Markdown%20Cheat%20She
 ## Workshop Data
 The following data files contain the data that will be used for learning in R studio over the coming term:
 
-To get to the **Workshop 3** Data [Click Here](Data/Workshop%203
+To get to the **Workshop 3** Data [Click Here](Data/Workshop%203)
 
 To get to the **Workshop 5** Data [Click Here](Data/Workshop%205)
 
