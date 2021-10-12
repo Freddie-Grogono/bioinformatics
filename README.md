@@ -9,7 +9,7 @@ The data for the following workshops has been taken from [Chris Clements GitHub]
 ## Code
 The following links will take you to code that has been created thus far in the course:
 
-To get to the **Week 1 Homework Answers** [Click Here](https://github.com/Freddie-Grogono/bioinformatics/blob/main/Code/Week%201%20Code)
+To get to the **Week 1 Homework Answers** [Click Here](Code/Week%201%20Code)
 
 To get to the **Week 2 R Markdown** [Click Here](https://github.com/Freddie-Grogono/bioinformatics/blob/main/Code/R%20Markdown%20Cheat%20Sheet.Rmd)
 
