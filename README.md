@@ -13,7 +13,7 @@ The data for the following workshops has been taken from [Chris Clements GitHub]
 
 
 
-## Code <div align="left" width="100%"> <img src=".\Images\matrix code.jpg" width="400" alt="" /> </div>
+## Code 
 
 The following links will take you to code that has been created thus far in the course:
 
