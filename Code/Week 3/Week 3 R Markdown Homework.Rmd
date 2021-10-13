@@ -5,28 +5,68 @@ date: "13/10/2021"
 output: html_document
 ---
 
-# Installing p
-Firstly, it is important to install the relevant packages, in this case **"library(devtools)"**.
-This is a package containing functions that help with R package development
+# Installing Packages
+Firstly, it is important to install the relevant packages, in this case **library(tidyverse)** and **library(devtools)**.
 
-```{r eval = FALSE}
-library("devtools", dependencies = TRUE)
-```
-
-```{r, echo = FALSE}
-library("devtools", dependencies = TRUE)
-```
-
-Having done this 
-
+This is a package containing functions that help with R package development.
 
 ```{r}
+library("tidyverse")
+library("devtools")
+```
+
+Next we install the vroom package from GitHub:
+```{r, eval = FALSE}
 install_github("r-lib/vroom")
 ```
 
+Tell R to use the vroom() function from the vroom package: 
+```{r, eval = FALSE}
+vroom::vroom()
+```
+
+Make sure vroom is loaded into your R session (only need to do once):
+```{r}
+library(vroom)
+```
+
+Next we load the data that we are working on into the file itself.
+We have already loaded the two data sets "**to_sort_pop_1.csv**" and "**to_sort_pop_2.csv**" into my GitHub repository. 
+
+So lets first set the directory so that it knows where it is drawing the data from: 
+
+```{r}
+setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+```
 
 
+Next we identify the data within the repository and load it in:
+
+```{r}
+to_sort_pop_1 <- vroom("../Data/Workshop 3/to_sort_pop_1.csv")
+to_sort_pop_1
+
+to_sort_pop_2 <- vroom("../Data/Workshop 3/to_sort_pop_2.csv")
+to_sort_pop_2
+```
+
+Using tidyverse, join both of these data sets together into a single tibble:
+
+```{r}
+Sorted_Pop_Data <- full_join(to_sort_pop_1, to_sort_pop_2)
+```
 
 
-to_sort_pop_2:
-https://github.com/chrit88/Bioinformatics_data/blob/master/Workshop%203/to_sort_pop_2.csv
+Next we assign Sorted_Pop_Data values to Sorted_Pop_Data_Final AFTER performing the intended function:
+
+```{r}
+Sorted_Pop_Data_Final <- Sorted_Pop_Data %>%
+# Next we pivot, 
+  pivot_longer(cols = -c(species:tertiary_threat),
+               names_to = c("Population","Date"),
+               values_to = "Abundance",
+               names_pattern = "pop_?(.*)_(.*)",
+               )
+Sorted_Pop_Data_Final
+```
+

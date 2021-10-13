@@ -171,12 +171,120 @@ pre code {
 </div>
 
 
+<div id="installing-packages" class="section level1">
+<h1>Installing Packages</h1>
+<p>Firstly, it is important to install the relevant packages, in this case <strong>library(tidyverse)</strong> and <strong>library(devtools)</strong>.</p>
+<p>This is a package containing functions that help with R package development.</p>
+<pre class="r"><code>library(&quot;tidyverse&quot;)</code></pre>
+<pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
+<pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
+## v tibble  3.1.5     v dplyr   1.0.7
+## v tidyr   1.1.4     v stringr 1.4.0
+## v readr   2.0.2     v forcats 0.5.1</code></pre>
+<pre><code>## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+## x dplyr::filter() masks stats::filter()
+## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(&quot;devtools&quot;)</code></pre>
 <pre><code>## Loading required package: usethis</code></pre>
+<p>Next we install the vroom package from GitHub:</p>
 <pre class="r"><code>install_github(&quot;r-lib/vroom&quot;)</code></pre>
-<pre><code>## Skipping install of &#39;vroom&#39; from a github remote, the SHA1 (c5b115b1) has not changed since last install.
-##   Use `force = TRUE` to force installation</code></pre>
-<p>to_sort_pop_2: <a href="https://github.com/chrit88/Bioinformatics_data/blob/master/Workshop%203/to_sort_pop_2.csv" class="uri">https://github.com/chrit88/Bioinformatics_data/blob/master/Workshop%203/to_sort_pop_2.csv</a></p>
+<p>Tell R to use the vroom() function from the vroom package:</p>
+<pre class="r"><code>vroom::vroom()</code></pre>
+<p>Make sure vroom is loaded into your R session (only need to do once):</p>
+<pre class="r"><code>library(vroom)</code></pre>
+<p>Next we load the data that we are working on into the file itself. We have already loaded the two data sets “<strong>to_sort_pop_1.csv</strong>” and “<strong>to_sort_pop_2.csv</strong>” into my GitHub repository.</p>
+<p>So lets first set the directory so that it knows where it is drawing the data from:</p>
+<pre class="r"><code>setwd(dirname(rstudioapi::getActiveDocumentContext()$path))</code></pre>
+<p>Next we identify the data within the repository and load it in:</p>
+<pre class="r"><code>to_sort_pop_1 &lt;- vroom(&quot;../Data/Workshop 3/to_sort_pop_1.csv&quot;)</code></pre>
+<pre><code>## Rows: 30 Columns: 29</code></pre>
+<pre><code>## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;\t&quot;
+## chr  (4): species, primary_threat, secondary_threat, tertiary_threat
+## dbl (24): pop_1_2003-01-01, pop_1_2004-01-01, pop_1_2005-01-01, pop_1_2006-0...
+## lgl  (1): pop_1_1995-01-01</code></pre>
+<pre><code>## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>to_sort_pop_1</code></pre>
+<pre><code>## # A tibble: 30 x 29
+##    species     primary_threat  secondary_threat tertiary_threat `pop_1_2003-01-~
+##    &lt;chr&gt;       &lt;chr&gt;           &lt;chr&gt;            &lt;chr&gt;                      &lt;dbl&gt;
+##  1 Schistidiu~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;                          NA
+##  2 Paraleucob~ Exploitation    Habitat loss     &lt;NA&gt;                          NA
+##  3 Scapania p~ Climate change  &lt;NA&gt;             &lt;NA&gt;                          NA
+##  4 Seligera r~ Exploitation    &lt;NA&gt;             &lt;NA&gt;                          NA
+##  5 Tortula su~ Habitat loss    Pollution        Climate change                96
+##  6 Pohlia mel~ &lt;NA&gt;            &lt;NA&gt;             &lt;NA&gt;                         288
+##  7 Bryum weig~ Exploitation    &lt;NA&gt;             &lt;NA&gt;                          81
+##  8 Ceratodon ~ &lt;NA&gt;            &lt;NA&gt;             &lt;NA&gt;                          NA
+##  9 Trichocole~ Climate change  &lt;NA&gt;             &lt;NA&gt;                         245
+## 10 Bryum klin~ Habitat loss    &lt;NA&gt;             &lt;NA&gt;                          22
+## # ... with 20 more rows, and 24 more variables: pop_1_2004-01-01 &lt;dbl&gt;,
+## #   pop_1_2005-01-01 &lt;dbl&gt;, pop_1_2006-01-01 &lt;dbl&gt;, pop_1_2007-01-01 &lt;dbl&gt;,
+## #   pop_1_2008-01-01 &lt;dbl&gt;, pop_1_2009-01-01 &lt;dbl&gt;, pop_1_2010-01-01 &lt;dbl&gt;,
+## #   pop_1_2011-01-01 &lt;dbl&gt;, pop_1_2012-01-01 &lt;dbl&gt;, pop_1_2013-01-01 &lt;dbl&gt;,
+## #   pop_1_2014-01-01 &lt;dbl&gt;, pop_1_2015-01-01 &lt;dbl&gt;, pop_1_2016-01-01 &lt;dbl&gt;,
+## #   pop_1_2017-01-01 &lt;dbl&gt;, pop_1_2018-01-01 &lt;dbl&gt;, pop_1_2019-01-01 &lt;dbl&gt;,
+## #   pop_1_2000-01-01 &lt;dbl&gt;, pop_1_2001-01-01 &lt;dbl&gt;, pop_1_2002-01-01 &lt;dbl&gt;, ...</code></pre>
+<pre class="r"><code>to_sort_pop_2 &lt;- vroom(&quot;../Data/Workshop 3/to_sort_pop_2.csv&quot;)</code></pre>
+<pre><code>## Rows: 30 Columns: 28</code></pre>
+<pre><code>## -- Column specification --------------------------------------------------------
+## Delimiter: &quot;\t&quot;
+## chr  (4): species, primary_threat, secondary_threat, tertiary_threat
+## dbl (21): pop_2_2000-01-01, pop_2_2001-01-01, pop_2_2002-01-01, pop_2_2003-0...
+## lgl  (3): pop_2_1996-01-01, pop_2_1997-01-01, pop_2_1998-01-01</code></pre>
+<pre><code>## 
+## i Use `spec()` to retrieve the full column specification for this data.
+## i Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
+<pre class="r"><code>to_sort_pop_2</code></pre>
+<pre><code>## # A tibble: 30 x 28
+##    species     primary_threat  secondary_threat tertiary_threat `pop_2_2000-01-~
+##    &lt;chr&gt;       &lt;chr&gt;           &lt;chr&gt;            &lt;chr&gt;                      &lt;dbl&gt;
+##  1 Sphagnum p~ &lt;NA&gt;            &lt;NA&gt;             &lt;NA&gt;                          NA
+##  2 Pohlia wah~ Habitat loss    Pollution        &lt;NA&gt;                          NA
+##  3 Sphagnum l~ Pollution       Exploitation     &lt;NA&gt;                          NA
+##  4 Marchantia~ &lt;NA&gt;            &lt;NA&gt;             &lt;NA&gt;                          NA
+##  5 Platyhypni~ Habitat loss    &lt;NA&gt;             &lt;NA&gt;                          NA
+##  6 Scleropodi~ Pollution       &lt;NA&gt;             &lt;NA&gt;                          NA
+##  7 Hedwigia s~ Habitat fragme~ &lt;NA&gt;             &lt;NA&gt;                          NA
+##  8 Cephalozia~ Habitat fragme~ &lt;NA&gt;             &lt;NA&gt;                          NA
+##  9 Rhynchoste~ &lt;NA&gt;            &lt;NA&gt;             &lt;NA&gt;                          NA
+## 10 Pseudolesk~ Habitat loss    &lt;NA&gt;             &lt;NA&gt;                          70
+## # ... with 20 more rows, and 23 more variables: pop_2_2001-01-01 &lt;dbl&gt;,
+## #   pop_2_2002-01-01 &lt;dbl&gt;, pop_2_2003-01-01 &lt;dbl&gt;, pop_2_2004-01-01 &lt;dbl&gt;,
+## #   pop_2_2005-01-01 &lt;dbl&gt;, pop_2_2006-01-01 &lt;dbl&gt;, pop_2_2007-01-01 &lt;dbl&gt;,
+## #   pop_2_2008-01-01 &lt;dbl&gt;, pop_2_2009-01-01 &lt;dbl&gt;, pop_2_2010-01-01 &lt;dbl&gt;,
+## #   pop_2_2011-01-01 &lt;dbl&gt;, pop_2_2012-01-01 &lt;dbl&gt;, pop_2_2013-01-01 &lt;dbl&gt;,
+## #   pop_2_2014-01-01 &lt;dbl&gt;, pop_2_2015-01-01 &lt;dbl&gt;, pop_2_2016-01-01 &lt;dbl&gt;,
+## #   pop_2_2017-01-01 &lt;dbl&gt;, pop_2_2018-01-01 &lt;dbl&gt;, pop_2_2019-01-01 &lt;dbl&gt;, ...</code></pre>
+<p>Using tidyverse, join both of these data sets together into a single tibble:</p>
+<pre class="r"><code>Sorted_Pop_Data &lt;- full_join(to_sort_pop_1, to_sort_pop_2)</code></pre>
+<pre><code>## Joining, by = c(&quot;species&quot;, &quot;primary_threat&quot;, &quot;secondary_threat&quot;, &quot;tertiary_threat&quot;)</code></pre>
+<p>Next we assign Sorted_Pop_Data values to Sorted_Pop_Data_Final AFTER performing the intended function:</p>
+<pre class="r"><code>Sorted_Pop_Data_Final &lt;- Sorted_Pop_Data %&gt;%
+
+  pivot_longer(cols = -c(species:tertiary_threat),
+               names_to = c(&quot;Population&quot;,&quot;Date&quot;),
+               values_to = &quot;Abundance&quot;,
+               names_pattern = &quot;pop_?(.*)_(.*)&quot;,
+               )
+Sorted_Pop_Data_Final</code></pre>
+<pre><code>## # A tibble: 2,940 x 7
+##    species    primary_threat  secondary_threat tertiary_threat Population Date  
+##    &lt;chr&gt;      &lt;chr&gt;           &lt;chr&gt;            &lt;chr&gt;           &lt;chr&gt;      &lt;chr&gt; 
+##  1 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2003-~
+##  2 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2004-~
+##  3 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2005-~
+##  4 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2006-~
+##  5 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2007-~
+##  6 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2008-~
+##  7 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2009-~
+##  8 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2010-~
+##  9 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2011-~
+## 10 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2012-~
+## # ... with 2,930 more rows, and 1 more variable: Abundance &lt;dbl&gt;</code></pre>
+</div>
 
 
 
