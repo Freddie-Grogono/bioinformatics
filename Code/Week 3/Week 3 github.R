@@ -406,5 +406,95 @@ library(vroom)
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
 
-wad_dat <- vroom('/Data/Workshop 3/wader_data.csv')
+wad_dat <- vroom('../Data/Workshop 3/wader_data.csv')
+
+# be careful where to put in the fullstops and what not 
+
+# using vroom to install diredtly from github 
+
+covid_dat <- vroom("https://raw.githubusercontent.com/chrit88/Bioinformatics_data/master/Workshop%203/time_series_covid19_deaths_global.csv")
+
+# note that this does require an internet connection though 
+
+# vroom can also load multiple files simultaenously, combining them into a single object
+# as long as the column names are the same across the different files
+# vroom provides a nice example of this in their vignette:
+
+##you can ignore this code for the moment if you want
+##but to briefly summarise it is reading in some data included in base R
+##and then splitting it into 3 differnt data.frame style objects based on the values in one of the columns ("cyl")
+mt <- tibble::rownames_to_column(mtcars, "model")
+purrr::iwalk(
+  split(mt, mt$cyl),
+  ##save this split files in to the default directory
+  ~ vroom_write(.x, glue::glue("mtcars_{.y}.csv"), "\t")
+)
+
+##find files in the default directory which start with "mtcars" and end in "csv"
+##save these file names as an object called "files"
+files <- fs::dir_ls(glob = "mtcars*csv")
+
+##these are then the names of the files matching the above arguments:
+files
+##then load these file names using vroom 
+vroom(files)
+#You can see that vroom() now returns a single file which is the combination of the 
+# three files we read in. Don’t worry about trying to understand all the detail provided 
+# thats what we will be doing in the next section.
+
+# R Data
+# One other very useful file type to know about in R is .RData, which is (unsurprisingly) 
+# specific to the R progrmaming language. This has its advantages (its very space efficient, 
+# and you arent restricted to dealing with 2 dimensional tables as you are with the .csv file 
+# type - i.e. you can share complex data types like lists, matrices, etc) but the draw back is 
+# that you can’t open it in other programmes (e.g. like a .csv file where you can open it in Excel 
+# and visualise it).
+
+# .RData are loaded into R using the load() function in much the same way as .csv files are:
+
+##load in some RData
+load("my_data/pathway/my_data.RData")
+
+# ^ example 
+
+# Writing Data out of R
+# .csv data 
+
+# write out a .csv file:
+
+## --  vroom_write(my_data, "a pathway/a data folder/ the_name_of_my_data.csv") -- 
+
+# R Data:
+# can be written out using the save() function in base:
+# write out my data as an RData file: 
+
+# save(my_data, file - "a pathway/ a data folder/ the_name_of_my_RData.RData)
+
+# However we can here specify as many items as we want to save out, and these data types can be anything R can handle (vector, list, array, etc):
+  
+  ##write out my data as an RData file:
+#  save(my_data, 
+ #      my_vector, 
+  #     my_list, 
+   #    my_array,
+    #   file = "a pathway/a data folder/the_name_of_my_RData.RData")
+
+# the above would this save all of those data objects as a single .RData file, and when 
+# you load that .RData file in all of those objects would be 
+# available straight away in the global environment under their original names. Nifty!
+
+
+
+
+# Installing and using Tidyverse:
+
+##install the tidyverse
+install.packages("tidyverse")
+
+#and then loading as normal:
+# load the tidyverse
+library("tidyverse")
+
+# you have just installed all of TidyVerse and are now ready to use all of the packages that it comes with
+
 
