@@ -143,6 +143,38 @@ The version control aspect of Git means every change to the repository is record
 - Provide document information in header of R Markdown file
 
 - ```
+
+
+
+##Functions covered today
+
+**Function/operator**                         | **Call**
+:---------------------------------------------|:--------
+Create a matrix                          	    |matrix()
+Sequence of regular numbers	                  | seq()
+Dimensions of an object               	      | 	dim()
+Matrix multiplication                	        | 	%*%
+Transpose	                                    | t()
+Create matrix where diagonal is filled with x	| 	diag()
+Return the diagonal of a matrix	              | 	diag()
+Calculate eighenvalues and eigenvectors		    | eigen()
+Sums of the rows                            	| 	rowSums()
+Sums of the columns	                        	| cowSums()
+Means of the rows	                           	| rowMeans()
+Means of the columns                        	| 	colMeans()
+Make an array	                                | 	array()
+Make a data.frame	                          	| data.frame()
+Make a list                                 	| 	list()
+Install a package from CRAN		                | install.packages()
+Install a package from Github	                | 	install_github()
+Load a package into the global environment	  | 	library()
+Reading in data		                            | vroom()
+Set working directory to file location        | 	setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
+Check the class of an object        	        | 	class()
+Change a file from wide to long format	      | 	pivot_longer()
+Change a file from long to wide format       	| 	pivot_wider()
+     
+
 ---
 title: "R Cheat Sheet"
 author: "Freddie Grogono"

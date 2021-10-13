@@ -497,4 +497,69 @@ library("tidyverse")
 
 # you have just installed all of TidyVerse and are now ready to use all of the packages that it comes with
 
+# Pipelines:
+
+my_data %>% function_1() %>% function_2()
+
+#This reads as “take my_data, apply function_1() to that data, then apply function_2() 
+# to that data produced when I apply function_1()”.
+
+# Tidyverse is great until you start using really large data files ( > 1GB)
+# In this case it is beter to use: data.table 
+
+#data.table has package has been specifically designed to deal with 'big' data - (>10GB) and not 
+# chewing up RAM 
+
+# might need data.table later on
+
+# summarising data
+# starting some data manipulation 
+
+class(covid_dat)
+
+covid_dat
+
+# that this data is a tibble, with 248 rows and 69 columns
+# the names of the first few columns
+# whether they are character (<chr>) or numeric (<dbl> - dbl a data type 
+# defined to hold numeric values with decimal points, i.e. a kind of numeric vector).
+# that there are 63 more columns (variables) which have not 
+# been displayed, and the names and types of data these columns contain
+
+
+##change the first two names of our data frame
+names(covid_dat)[1:2] <- c("Province.State", "Country.Region") 
+covid_dat
+
+# So our data is in wide format - unfortunately computers (for the most part) hate this sort of data. 
+# This means we need to reshape it.
+
+# %>% - the magrittr operator 
+
+##so this says take our data frame called covid_dat
+covid_long <- covid_dat %>%
+  ##and then apply this function 
+  pivot_longer(cols = -c( Province.State, 
+                          Country.Region, 
+                          Lat, 
+                          Long))
+# cols = to specify the columns we want pivot_longer to use to pivot the data around.
+# the hard to spot - before the vector of columns! Also, that unlike a lot of other R functions 
+# we dont need to use the "" to specify that we are talking about a name not an object
+
+data.frame(covid_long)
+
+##our data frame
+covid_long <- covid_dat %>%
+  ##and then apply this function 
+  pivot_longer(cols = -c(Province.State:Long),
+               names_to = "Date",
+               values_to = "Deaths")
+
+covid_long
+
+##change long to wide
+covid_long %>% 
+  pivot_wider(names_from = Date,
+              values_from = Deaths)
 
