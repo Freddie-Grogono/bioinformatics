@@ -405,9 +405,6 @@ library(vroom)
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-wad_dat <- vroom('../Data/Workshop 3/water_data.csv')
 
-# using the double .. you acn go back two folders to your 'code' 
-
-wad_dat <- vroom('.../Data/Workshop 3/time_series_covid19_deaths_global.csv')
+wad_dat <- vroom('/Data/Workshop 3/wader_data.csv')
 
