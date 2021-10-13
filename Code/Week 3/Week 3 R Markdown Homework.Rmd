@@ -1,0 +1,32 @@
+---
+title: "Week 3 Homework"
+author: "Freddie Grogono"
+date: "13/10/2021"
+output: html_document
+---
+
+# Installing p
+Firstly, it is important to install the relevant packages, in this case **"library(devtools)"**.
+This is a package containing functions that help with R package development
+
+```{r eval = FALSE}
+library("devtools", dependencies = TRUE)
+```
+
+```{r, echo = FALSE}
+library("devtools", dependencies = TRUE)
+```
+
+Having done this 
+
+
+```{r}
+install_github("r-lib/vroom")
+```
+
+
+
+
+
+to_sort_pop_2:
+https://github.com/chrit88/Bioinformatics_data/blob/master/Workshop%203/to_sort_pop_2.csv
