@@ -393,10 +393,7 @@ vroom::vroom()
 
 # loading from your computer
 
-install_github("r-lib/vroom")
-vroom::vroom()
-
-library(vroom)
+library("devtools")
 
 install_github("r-lib/vroom")
 
@@ -404,9 +401,13 @@ vroom::vroom()
 
 library(vroom)
 
-word_dat <- vroom("C:/Users/fg17761/OneDrive - University of Bristol/Bioinformatics MSc/Term 1/Programming in R/Week 2/bioinformatics/Data/Workshop 3")
 
 
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 
-wad_dat <- vroom('')
+wad_dat <- vroom('../Data/Workshop 3/water_data.csv')
+
+# using the double .. you acn go back two folders to your 'code' 
+
+wad_dat <- vroom('.../Data/Workshop 3/time_series_covid19_deaths_global.csv')
+
