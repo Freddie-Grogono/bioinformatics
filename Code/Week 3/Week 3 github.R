@@ -14,7 +14,7 @@ d
 c(c(1, 4, 1, 7), c(3, 2))
 
 
-  ## Matrices are 2 two dimensional 
+## Matrices are 2 two dimensional 
 # where the first argument is the data to be included in the matrix
 # here we are using the seq() function which generates regular sequences (see ?seq()) for more information)
 # and the second and third arguments specify the shape of the matrix (number of columns, and number of rows).
@@ -23,7 +23,7 @@ matrix(seq(from = 1, to = 6, by =1), ncol = 3, nrow = 2)
 # Creating a blank matrix full of NAs
 matrix(NA, ncol = 3, nrow = 4)
 
-  ## You can also shape a vector into a matrix using the dim() function:
+## You can also shape a vector into a matrix using the dim() function:
 b <- seq(from = 1, to = 6, by = 1) ## b <- 1 2 3 4 5 6 (it becomes a string from 1 to 6, with a gap of 1)
 #set the dimensions of the matrix (nrows and then ncolumns)
 # Rows = across & Columns = down
@@ -184,8 +184,8 @@ My_Array
 # on a particular Day:
 
 My_Data_Frame <- data.frame("Day" = rep(1:3, each = 3), 
-                       "Species" = rep(letters[1:3], each = 3),
-                       "Seen" = rbinom(n = 9, size = 1, prob = 0.5))
+                            "Species" = rep(letters[1:3], each = 3),
+                            "Seen" = rbinom(n = 9, size = 1, prob = 0.5))
 
 My_Data_Frame
 ##look at the Day column
@@ -314,7 +314,7 @@ My_Second_List <- list("numbers_vec" = Numeric_Matrix,
                        "letters" = Letter_Vector,
                        "spp_pres" = Species_Data,
                        "number" = 5
-                       )
+)
 
 My_Second_List
 # display the names of the objects:
