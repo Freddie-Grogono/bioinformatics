@@ -144,9 +144,10 @@ The version control aspect of Git means every change to the repository is record
 
 - ```
 
+# Week 3
+## Functions covered during the Workshop 
 
 
-##Functions covered today
 
 **Function/operator**                         | **Call**
 :---------------------------------------------|:--------
@@ -200,7 +201,7 @@ eval = TRUE/FALSE | Run/don't run code
 fig.cap="x"       | Figure caption for plots
 Load packages in r setup script:
 ```
-# Load tidyverse
+
 {r setup, include=FALSE}
 library(tidyverse)
 knitr::opts_chunk$set(echo = TRUE)
