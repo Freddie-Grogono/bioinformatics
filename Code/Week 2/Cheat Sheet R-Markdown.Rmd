@@ -1,0 +1,174 @@
+---
+title: "R Cheat Sheet"
+author: "Freddie Grogono"
+date: "12/10/2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    toc_depth: 3
+---
+
+# THE TASK
+
+Using RMarkdown, summarize the most important bits of what you have learned so far(Week 1 and Week 2) - i.e. make a sort of cheat sheet for yourself of useful functions or insights. This will be different for everyone, so I won’t tell you what to put on it but I do suggest you include a table of useful functions which you have come across during your reading.
+
+## Useful functions
+
+Useful this linke to access R function documentation online:
+<https://www.rdocumentation.org>
+
+Function                                  | Description
+:-----------------------------------------|:----------------------------------------------------------
+?function()                               | Open help topic for function
+??function()                              | Search help topics for function
+c(…, recursive = FALSE, use.names = TRUE) | Combine Values into a Vector or List
+as.factor(x)                              | Converts a column from numeric to factor
+runif(n, min = 0, max = 1)                | Generate n random floats between min and max
+is.numeric(x)                             | Check if a vector is numeric
+is.character(x)                           | Check if a vector is a character
+is.logical(x)                             | Check if a vector is logical
+sum(…, na.rm = FALSE)                     | Returns the sum of all the values present in its arguments
+mean(x, trim = 0, na.rm = FALSE, …)       | Calculates arithmetic mean of arguments
+ceiling(x)                                | Round to upper integer
+floor(x)                                  | Round to lower integer
+trunc(x, …)                               | Rounds towards 0
+round(x, digits = 0)                      | Round to decimal digits given
+signif(x, digits = 6)                     | Rounds to significant digits given
+sqrt(x)                                   | Computes the square root of the specified float value
+length(x)                                 | Return the length of a vector
+names(x)                                  | Check the names of a vector or add names to a vector
+sort(x, decreasing = FALSE, …)            | Sort a vector into ascending or descending order
+function( arglist ) expr                  | Define new function
+return(value)                             | Return the desired object from a function
+
+# Week 1
+
+## Good coding practice
+
+- Write your complex code in the .R document rather than in the console
+- The console is used for experimenting with code, it will not save what you put into it
+- Annotate on your code using the hash (`#`) so you can understand it when you come back to it
+
+
+
+## Basic maths operators
+
+These operators are straightforward to use and self explanatory yet crucial:
+
+Basic maths | Code | Example
+:-----------|:-----|:-------
+Add         | +    | 1+1
+Subtract    | -    | 2-4
+Divide      | /    | 12/3
+Multiply    | *    | 2*4
+Power       | ^    | 3^2
+Brackets    | ()   | 3*(1+2)
+
+## Logical operators
+
+Logical operator      | Code | Example
+:---------------------|:-----|:-----------
+Equal to              | ==   | c(1:5) == 2
+Not equal to          | !=   | c(1:5) == 3
+Less than             | <    | 4 < 5
+More than             | >    | 3 > 5
+Less than or equal to | <=   | c(1:5) <= 3
+More than or equal to | >=   | c(1:5) >= 2
+Or                    | \|   | x <- c(1:5) ; x > 3 | x < 2
+Within                | %in% | 1:10 %in% c(1,3,5,9)
+
+## Non-trivial answers
+
+```{r}
+# Dividing by zero
+1 / 0
+-1 / 0
+# Divide zero by zero
+0 / 0
+```
+
+## Writing your own functions
+
+```{r, eval=FALSE}
+# function layout below
+function_name <- function(argument 1, argument 2, …) {
+    var1 <- function_logic_here
+    return(var1)
+}
+```
+
+# Week 2
+
+## GitHub
+
+- GitHub is an online repository for sharing/collaborating on code. Frontend for Git
+- Git is a version control system
+
+### GitHub concepts
+
+Storing project code into repositories. These are stored online, as in they're (hosted on GitHub).
+
+The code is then also cloned to a local environment which you can then work on whilst offline (locally).
+
+Use the commit button, in combination with a description of the progress that has been made, 
+
+Project code stored in repositories. Repositories are usually stored remotely/online (i.e. hosted on GitHub), however code is usually **cloned** to local environment and worked on locally/offline. Once significant progress has been achieved, a **commit** is created with a description of the changes, followed by a **push** to upload the changes to the online repository. If a local cloned repository is behind on commits present on a remote repository, the changes can be **pulled** from the remote repository.
+
+All code in the repository exists on branches. The default branch is known as `main` (and previously `master`). New branches can be created to experiment with changes to the repository, without affecting code on main. As the main branch should always be functioning code, new features and fixes should be worked on in a branch and **merged** with main only when it is ready. Branch names should be descriptive of what is being worked on.
+
+To work on the repository of another GitHub user, their repository can be **forked**. This places a copy of their repository under your GitHub user.
+
+The version control aspect of Git means every change to the repository is recorded and can be reverted or reverted to.
+
+- To reset local environment to previous commit
+
+  `$ git reset --hard commit_SHA_here`
+
+  `--hard` flag is passed to undo current changes (so repository files are restored to previous commit)
+
+### GitHub repository files
+
+- README.md - Provides information on the project. Document parsed as [GitHub Flavored Markdown (GFM)](https://github.github.com/gfm/)
+- .gitignore - Files and folders to exclude from upload to repository
+- .git folder - Folder containing information used by Git
+
+## R Markdown
+
+- Markdown document with inline executable R code chunks
+- Provide document information in header of R Markdown file
+
+- ```
+---
+title: "R Cheat Sheet"
+author: "Freddie Grogono"
+date: "12/10/2021"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    toc_depth: 3
+---
+```
+
+### Code chunks
+
+Code chunks begin with ` ```{r, args} ` and end with ` ``` `:
+
+Args for ` ```{r, args} `:
+Arg               | Description
+:-----------------|:--------------------
+echo = TRUE/FALSE | Show/hide code chunk
+eval = TRUE/FALSE | Run/don't run code
+fig.cap="x"       | Figure caption for plots
+Load packages in r setup script:
+```
+# Load tidyverse
+{r setup, include=FALSE}
+library(tidyverse)
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+

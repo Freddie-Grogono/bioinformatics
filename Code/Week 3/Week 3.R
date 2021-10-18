@@ -393,10 +393,7 @@ vroom::vroom()
 
 # loading from your computer
 
-install_github("r-lib/vroom")
-vroom::vroom()
 
-library(vroom)
 
 install_github("r-lib/vroom")
 
