@@ -172,9 +172,17 @@ pre code {
 
 
 <div id="installing-packages" class="section level1">
-<h1>Installing Packages</h1>
-<p>Firstly, it is important to install the relevant packages, in this case <strong>library(tidyverse)</strong> and <strong>library(devtools)</strong>.</p>
-<p>This is a package containing functions that help with R package development.</p>
+<h1>1. Installing Packages</h1>
+<div id="what-to-install" class="section level2">
+<h2>What to install?</h2>
+<p>It is important to install the relevant packages, in this case we want: <strong>library(tidyverse)</strong> and <strong>library(devtools)</strong>.</p>
+<div id="tidyverse" class="section level3">
+<h3>Tidyverse</h3>
+<p>The tidyverse is a coherent system of packages for data manipulation, exploration and visualization that share a common design philosophy <a href="https://www.tidyverse.org/" class="uri">https://www.tidyverse.org/</a>.</p>
+</div>
+<div id="devtools" class="section level3">
+<h3>DevTools</h3>
+<p>We will also be installing devtools which is a package that helsp to simplify some tasks.</p>
 <pre class="r"><code>library(&quot;tidyverse&quot;)</code></pre>
 <pre><code>## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --</code></pre>
 <pre><code>## v ggplot2 3.3.5     v purrr   0.3.4
@@ -186,12 +194,23 @@ pre code {
 ## x dplyr::lag()    masks stats::lag()</code></pre>
 <pre class="r"><code>library(&quot;devtools&quot;)</code></pre>
 <pre><code>## Loading required package: usethis</code></pre>
-<p>Next we install the vroom package from GitHub:</p>
+</div>
+<div id="vroom-package" class="section level3">
+<h3>Vroom Package</h3>
+<p>This is a package containing functions that help with R package development. - Vroom reads rectangular data into R, such as: comma separated (csv), tab separated (tsv) and fixed width files (fwf).</p>
+<p>It performs similar roles to functions like: readr::read_csv (), data.table::fread (), read.csv ().</p>
+<p>We install the vroom package from <strong>GitHub</strong>:</p>
 <pre class="r"><code>install_github(&quot;r-lib/vroom&quot;)</code></pre>
 <p>Tell R to use the vroom() function from the vroom package:</p>
 <pre class="r"><code>vroom::vroom()</code></pre>
 <p>Make sure vroom is loaded into your R session (only need to do once):</p>
 <pre class="r"><code>library(vroom)</code></pre>
+<ol start="2" style="list-style-type: decimal">
+<li>Data Loading</li>
+</ol>
+</div>
+<div id="github-repository" class="section level3">
+<h3>GitHub Repository</h3>
 <p>Next we load the data that we are working on into the file itself. We have already loaded the two data sets “<strong>to_sort_pop_1.csv</strong>” and “<strong>to_sort_pop_2.csv</strong>” into my GitHub repository.</p>
 <p>So lets first set the directory so that it knows where it is drawing the data from:</p>
 <pre class="r"><code>setwd(dirname(rstudioapi::getActiveDocumentContext()$path))</code></pre>
@@ -261,12 +280,14 @@ pre code {
 <p>Using tidyverse, join both of these data sets together into a single tibble:</p>
 <pre class="r"><code>Sorted_Pop_Data &lt;- full_join(to_sort_pop_1, to_sort_pop_2)</code></pre>
 <pre><code>## Joining, by = c(&quot;species&quot;, &quot;primary_threat&quot;, &quot;secondary_threat&quot;, &quot;tertiary_threat&quot;)</code></pre>
-<p>Next we assign Sorted_Pop_Data values to Sorted_Pop_Data_Final AFTER performing the intended function:</p>
+<pre class="r"><code># Note: the use of &#39;full_join&#39; here, this is just one of many ways that you can fuse
+# data together, more can be found at: &lt;https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/join&gt; </code></pre>
+<p>Next we need to pivot and sort the data using the pivot_longer function to change the data from wide to long:</p>
+<p>Sorted_Pop_Data values to Sorted_Pop_Data_Final AFTER performing the intended function:</p>
 <pre class="r"><code>Sorted_Pop_Data_Final &lt;- Sorted_Pop_Data %&gt;%
-
   pivot_longer(cols = -c(species:tertiary_threat),
-               names_to = c(&quot;Population&quot;,&quot;Date&quot;),
-               values_to = &quot;Abundance&quot;,
+               names_to = c(&quot;Population&quot;,&quot;Date&quot;),# This takes all the pop_1_date etc and puts them in a column called population
+               values_to = &quot;Abundance&quot;, # This takes the values of each of these dates and places them into a column called Abundance 
                names_pattern = &quot;pop_?(.*)_(.*)&quot;,
                )
 Sorted_Pop_Data_Final</code></pre>
@@ -284,6 +305,8 @@ Sorted_Pop_Data_Final</code></pre>
 ##  9 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2011-~
 ## 10 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2012-~
 ## # ... with 2,930 more rows, and 1 more variable: Abundance &lt;dbl&gt;</code></pre>
+</div>
+</div>
 </div>
 
 

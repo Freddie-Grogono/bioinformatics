@@ -5,37 +5,54 @@ date: "13/10/2021"
 output: html_document
 ---
 
-# Installing Packages
-Firstly, it is important to install the relevant packages, in this case **library(tidyverse)** and **library(devtools)**.
+# 1. Installing Packages
+## What to install?
 
-This is a package containing functions that help with R package development.
+It is important to install the relevant packages, in this case we want: **library(tidyverse)** and **library(devtools)**. 
 
-```{r}
+### Tidyverse
+The tidyverse is a coherent system of packages for data manipulation, exploration and visualization that share a common design philosophy <https://www.tidyverse.org/>.
+
+### DevTools
+We will also be installing devtools which is a package that helsp to simplify some tasks.
+
+```{r, echo = TRUE}
 library("tidyverse")
 library("devtools")
 ```
 
-Next we install the vroom package from GitHub:
-```{r, eval = FALSE}
+### Vroom Package 
+
+This is a package containing functions that help with R package development.
+- Vroom reads rectangular data into R, such as: comma separated (csv), tab separated (tsv) and fixed width files (fwf).  
+
+It performs similar roles to functions like: readr::read_csv (), data.table::fread (), read.csv ().
+
+We install the vroom package from **GitHub**:
+```{r, eval = TRUE}
 install_github("r-lib/vroom")
 ```
 
 Tell R to use the vroom() function from the vroom package: 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 vroom::vroom()
 ```
 
 Make sure vroom is loaded into your R session (only need to do once):
-```{r}
+```{r, eval = TRUE}
 library(vroom)
 ```
 
+
+# 2. Data Loading
+
+### GitHub Repository
 Next we load the data that we are working on into the file itself.
 We have already loaded the two data sets "**to_sort_pop_1.csv**" and "**to_sort_pop_2.csv**" into my GitHub repository. 
 
 So lets first set the directory so that it knows where it is drawing the data from: 
 
-```{r}
+```{r, eval = FALSE}
 setwd(dirname(rstudioapi::getActiveDocumentContext()$path))
 ```
 
@@ -50,21 +67,30 @@ to_sort_pop_2 <- vroom("../Data/Workshop 3/to_sort_pop_2.csv")
 to_sort_pop_2
 ```
 
+# 3. Joinning Data
 Using tidyverse, join both of these data sets together into a single tibble:
 
 ```{r}
 Sorted_Pop_Data <- full_join(to_sort_pop_1, to_sort_pop_2)
+# Note: the use of 'full_join' here, this is just one of many ways that you can fuse
+# data together, more can be found at: <https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/join> 
 ```
 
 
-Next we assign Sorted_Pop_Data values to Sorted_Pop_Data_Final AFTER performing the intended function:
+
+# 4. Sorting Data
+
+### Pivot Function
+Next we need to pivot and sort the data using the pivot_longer function to 
+change the data from wide to long: 
+
+Sorted_Pop_Data values to Sorted_Pop_Data_Final AFTER performing the intended function:
 
 ```{r}
 Sorted_Pop_Data_Final <- Sorted_Pop_Data %>%
-# Next we pivot, 
   pivot_longer(cols = -c(species:tertiary_threat),
-               names_to = c("Population","Date"),
-               values_to = "Abundance",
+               names_to = c("Population","Date"),# This takes all the pop_1_date etc and puts them in a column called population
+               values_to = "Abundance", # This takes the values of each of these dates and places them into a column called Abundance 
                names_pattern = "pop_?(.*)_(.*)",
                )
 Sorted_Pop_Data_Final
