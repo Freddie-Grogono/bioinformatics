@@ -124,3 +124,105 @@ pop_2020
 # think about making this join we need to do some careful consideration of whether we can 
 # actually join the two data sets in their current form.
 
+# Have a look at the structure of the two data sets: 
+#1:
+covid_long
+#2:
+pop_2020
+
+# Take the total population data for each country from the WB data and add 
+# it as a new column to the covid data
+# Easier to visualise when we look at the unique values in the 'country' column:
+
+##the first 10 and last 10 unique values in the country column
+## the ; operature acts as a new line - meaning you can run two bits of code which don't interact on the same line
+head(unique(pop_2020$country), 10); tail(unique(pop_2020$country), 10)
+
+# Not a big problem: 
+# we can drop the values for 'countries' in the pop_2020 data set which don't match 
+# the countries we have in the covid data. 
+
+# Two bigger issues which will become more apparent later on
+head(covid_dat, 10)
+
+# The 1st problem is the names of the countries - names of the countries 
+# The 2nd major problem is the 'province.state. column in the covid data. 
+# Lets look at Australia
+
+
+## just look at the data from Australia:
+covid_data %>% filter(Country.Region == "Australia")
+
+# It is easier to use the wide (not long) here because we can see waht is going on
+# in the 'Province.State' and 'Country.Region' column when they aren't repeated over and over 
+
+
+
+# Task
+# Now filter the WB data to only show the data from Australia, and compare this to 
+# the covid data. 
+# What are the differences?
+## the data for Australia from the WB
+
+pop_2020 %>% filter(country == "Australia")
+
+# This data is not split by state or province 
+# We need to convert the covid data so that we have total covid deaths for a country, not region 
+
+# We can do this using the 'tidyverse' and the 'summarise()' function:
+
+# summarise() allows us to specify what function we want to be applied: e.g mean(), sd() or in our case sum(), 
+# **It will then create a new column of a specified,name containing that data**  
+
+# We can pair this up with group_by() function, where we can specify the groups in which
+# we want the summarize function to be applied to. 
+
+# e.g. mean(), sd(), or in our case sum()
+# and will create a new column of a specified name containing that data.
+
+# We can pair this up with the group_by() function, where we can specify the groups in which we 
+# want the summarize function to be applied to. 
+
+# we now have a very powerful tool for rapidly and easily summarizing data which is complex
+# It is also very easily read by humans lel
+
+# TASK:
+
+## have a look at the data.frame that is produced:
+covid_country
+# Make a new data.frame from the old covid_long data.frame
+covid_country <- covid_long %>% 
+  
+  # we want to calculate the number of deaths in each country and at each date: 
+  group_by(Country.Region, Date) %>% 
+  
+  ## and we want the sum of the "Death" column in these groups:
+  summarise(Deaths = sum(Deaths))
+
+
+# we have removed the regions so the death toll is per country
+
+#look at the first row of the WB data:
+tail(pop_2020)
+
+# Download the countrycode package on CRAN (remember the tools --> install packages)
+
+library(countrycode)
+
+?countrycode
+
+covid_country$code <- countrycode()
+
+## add a column to covid data containing the 
+covid_country$code <- countrycode(covid_country$Country.Region, 
+                                  origin = "country.name", 
+                                  destination = "iso3c")
+
+##look at the new column we have added to the data set:
+head(covid_country, 1)
+
+##compare that to the values in the WB data
+pop_2020 %>% filter(iso3c == "AFG")
+
+
+# 2.4 Joining Data
