@@ -34,7 +34,7 @@ install_github("r-lib/vroom")
 ```
 
 Tell R to use the vroom() function from the vroom package: 
-```{r, eval = TRUE}
+```{r, eval = FALSE}
 vroom::vroom()
 ```
 
@@ -44,9 +44,11 @@ library(vroom)
 ```
 
 
-# 2. Data Loading
 
-### GitHub Repository
+
+# 2. Data Loading
+## GitHub Repository
+
 Next we load the data that we are working on into the file itself.
 We have already loaded the two data sets "**to_sort_pop_1.csv**" and "**to_sort_pop_2.csv**" into my GitHub repository. 
 

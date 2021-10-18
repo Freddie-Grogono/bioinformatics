@@ -201,16 +201,19 @@ pre code {
 <p>It performs similar roles to functions like: readr::read_csv (), data.table::fread (), read.csv ().</p>
 <p>We install the vroom package from <strong>GitHub</strong>:</p>
 <pre class="r"><code>install_github(&quot;r-lib/vroom&quot;)</code></pre>
+<pre><code>## Skipping install of &#39;vroom&#39; from a github remote, the SHA1 (c5b115b1) has not changed since last install.
+##   Use `force = TRUE` to force installation</code></pre>
 <p>Tell R to use the vroom() function from the vroom package:</p>
 <pre class="r"><code>vroom::vroom()</code></pre>
 <p>Make sure vroom is loaded into your R session (only need to do once):</p>
 <pre class="r"><code>library(vroom)</code></pre>
-<ol start="2" style="list-style-type: decimal">
-<li>Data Loading</li>
-</ol>
 </div>
-<div id="github-repository" class="section level3">
-<h3>GitHub Repository</h3>
+</div>
+</div>
+<div id="data-loading" class="section level1">
+<h1>2. Data Loading</h1>
+<div id="github-repository" class="section level2">
+<h2>GitHub Repository</h2>
 <p>Next we load the data that we are working on into the file itself. We have already loaded the two data sets “<strong>to_sort_pop_1.csv</strong>” and “<strong>to_sort_pop_2.csv</strong>” into my GitHub repository.</p>
 <p>So lets first set the directory so that it knows where it is drawing the data from:</p>
 <pre class="r"><code>setwd(dirname(rstudioapi::getActiveDocumentContext()$path))</code></pre>
@@ -277,11 +280,20 @@ pre code {
 ## #   pop_2_2011-01-01 &lt;dbl&gt;, pop_2_2012-01-01 &lt;dbl&gt;, pop_2_2013-01-01 &lt;dbl&gt;,
 ## #   pop_2_2014-01-01 &lt;dbl&gt;, pop_2_2015-01-01 &lt;dbl&gt;, pop_2_2016-01-01 &lt;dbl&gt;,
 ## #   pop_2_2017-01-01 &lt;dbl&gt;, pop_2_2018-01-01 &lt;dbl&gt;, pop_2_2019-01-01 &lt;dbl&gt;, ...</code></pre>
+</div>
+</div>
+<div id="joinning-data" class="section level1">
+<h1>3. Joinning Data</h1>
 <p>Using tidyverse, join both of these data sets together into a single tibble:</p>
 <pre class="r"><code>Sorted_Pop_Data &lt;- full_join(to_sort_pop_1, to_sort_pop_2)</code></pre>
 <pre><code>## Joining, by = c(&quot;species&quot;, &quot;primary_threat&quot;, &quot;secondary_threat&quot;, &quot;tertiary_threat&quot;)</code></pre>
 <pre class="r"><code># Note: the use of &#39;full_join&#39; here, this is just one of many ways that you can fuse
 # data together, more can be found at: &lt;https://www.rdocumentation.org/packages/dplyr/versions/0.7.8/topics/join&gt; </code></pre>
+</div>
+<div id="sorting-data" class="section level1">
+<h1>4. Sorting Data</h1>
+<div id="pivot-function" class="section level3">
+<h3>Pivot Function</h3>
 <p>Next we need to pivot and sort the data using the pivot_longer function to change the data from wide to long:</p>
 <p>Sorted_Pop_Data values to Sorted_Pop_Data_Final AFTER performing the intended function:</p>
 <pre class="r"><code>Sorted_Pop_Data_Final &lt;- Sorted_Pop_Data %&gt;%
@@ -305,7 +317,6 @@ Sorted_Pop_Data_Final</code></pre>
 ##  9 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2011-~
 ## 10 Schistidi~ Habitat destru~ &lt;NA&gt;             &lt;NA&gt;            1          2012-~
 ## # ... with 2,930 more rows, and 1 more variable: Abundance &lt;dbl&gt;</code></pre>
-</div>
 </div>
 </div>
 
