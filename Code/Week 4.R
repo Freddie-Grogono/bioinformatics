@@ -226,3 +226,141 @@ pop_2020 %>% filter(iso3c == "AFG")
 
 
 # 2.4 Joining Data
+
+# So now we have sorted the covid data out
+# we want to joing the population data from the WB to it 
+
+# Look on the tidyverse website to see which join() function we want 
+
+# REMEMBER that: full_join() keeps all of the columns AND rows for both x and y 
+# remember we have countries in the covid_data and countries 
+# AND economic areas in the WB data, so we want to drop these economic areas 
+# and just stick to the countries.
+
+# We can do this using LEFT_JOIN() < https://www.programmingr.com/tutorial/left-join-in-r/#:~:text=A%20left%20join%20in%20R%20is%20a%20merge,do%20not%20already%20exist%20in%20the%20first%20table. >
+
+# left_join returns all rows from x, and all columns from x and y
+# adding this to our cleaned data set covid_country via our new code column 
+# and the corresponding column of codes in the WB data 
+# need to make sure we selece the correct column of codes as there are a few!
+
+# We don't want ALL the columns of the WBdata, so we can use the select() function to specify
+# we only want the iso3c and value columns to be included in our join:
+
+# rename the 5th column of the pop data so it works:
+names(pop_2020)[5] <- "value"
+
+# demonstartation of what select does: 
+
+head(pop_2020 %>% select(iso3c, value))
+
+
+## now join the 2 data sets using left_join
+
+covid_w_pop <- left_join(covid_country, 
+                         pop_2020 %>% select(iso3c, value),
+                         by = c("code" = "iso3c"))
+                          # telling join() that "code" = "iso3c" 
+                          # otherwise _join() won't work out where to join the data sets.
+
+# look at new data set:
+
+covid_w_pop
+
+# we could have joined these data by country and by date using:
+
+                        # by = c("code" = "country", "date" = "Date")
+# however, we already filtered out the correct year from WB data AND the date in the covid data set is month/day/year
+# so we would need to extract the year data AND the most recent data is year 2020 in the covid data
+# and only 2019 in the WB data 
+
+# Letw now change the name of the "value" column to one which is more meaningful:
+
+# We do this using the which() function which takes a logical operator 
+# in this case names(covid_w_pop) == "value" - and returns a vector of numbers which is the 
+# positions in the vecotr where the statement is true: 
+
+# column names
+names(covid_w_pop)
+# so they are : "Country.Region", "Date", "Deaths", "Code", "Value"
+
+# the ones which are equal to "value":
+
+names(covid_w_pop) == "value"
+# is: FALSE, FALSE, FALSE, FALSE, TURE
+
+which(names(covid_w_pop) == "value")
+
+names(covid_w_pop)[5]
+
+# This means you don’t have to specify the location of the “value” manually 
+# (i.e. don’t need to do names(covid_w_pop)[5]) 
+# so if it ever changes position this code will still work.
+
+# change the name:
+names(covid_w_pop)[which(names(covid_w_pop) == "value")] <- "Population"
+
+names(covid_w_pop)[5] # checking this you can now see the name has been changed
+
+# Another quick visual check filtering out a single coutry from each data set 
+# and visually check that the population data are the same in each:
+
+## quick visual check
+covid_w_pop %>% filter(Country.Region=="Afghanistan" & Date == "1/22/20") 
+
+pop_2020 %>% filter(country=="Afghanistan")
+
+# Now we have joined the data together and done some cleaning we can start to calculate out the 
+# statistics we want and then start to think about visualising them.
+
+# 2.5 - Calculating Death Rates
+
+# what the total number of deaths are
+# what the number of deaths per day are (globally)
+# number of deaths per million people in the country
+
+
+# Total Global Deaths: 
+# the data is cumulative, so the total deaths will be the sum of the data for all countries
+# in the most recent date in the data frame 
+
+most_recent <- covid_country%>% # defining what the most recent year is 
+  filter(Date == max(covid_country$Date)) # using the fitler function to find this 
+
+sum(most_recent$Deaths) # then summing the final year of data cumulative deaths 
+
+# Number of deaths per day globally:
+
+# need to group the data to calculate this: 
+# need to save it as a new data.frame: 
+
+global_deaths_day <- covid_country%>% # so we have assigned the global_deaths from covid data
+  group_by(Date) %>% # we are then grouping the Date data 
+  summarise("Global.deaths" = sum(Deaths)) 
+
+
+# Lets make a quick check to ensure we dont have any issues in the data (like NAs):
+which(is.na(global_deaths_day$Global.deaths)) 
+
+# Great, it doesnt seem like we have any NAs (otherwise the calculation about would 
+# be a series of numbers corresponding to the rows in which those NA values are). 
+# We can trivially remove any NA’s in our data using the na.rm=T argument:
+
+# makine a new data frame of the global deaths using group_by() and summarise()
+
+global_deaths_day_1 <- covid_country %>%
+  group_by(Date) %>% 
+  summarise("Global.deaths" = sum(Deaths, na.rm = T)) # removing the NA values
+
+# 2.7 Deaths Per Million people:
+# This normalised death rate allows us to compare the reate of increase in deaths
+# between countries which have vastly different population sizes
+
+# lets go back to the covid_w_pop data set 
+# calculate deaths per million individuals for all of the countries in the covid_w_pop data.
+
+covid_w_pop$Deaths.p.m <- (covid_w_pop$Deaths / covid_w_pop$Population) * 1000000
+
+# look @ the data:
+tail(covid_w_pop)
+
