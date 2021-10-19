@@ -197,7 +197,7 @@ My_Data_Frame["Day"]
 # column the data types can't mix, but across columns they can.
 
 
-# specify the names for each of the coluns in the data.frame using the 
+# specify the names for each of the colunms in the data.frame using the 
 # form "Name" = 
 # We can still access data in the data frame using the "our_data[1,2] 
 # our our_data["Day"] approach earlier
