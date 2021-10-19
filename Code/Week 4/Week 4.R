@@ -364,3 +364,34 @@ covid_w_pop$Deaths.p.m <- (covid_w_pop$Deaths / covid_w_pop$Population) * 100000
 # look @ the data:
 tail(covid_w_pop)
 
+# 3 Visualising Data
+# we now have 2 data frames:
+# global_deaths_day & covid_w_pop
+# we're going to use ggplot within tidyverse to visualise data
+
+# ggplot is very widely used:
+# ggplot is already installed as we have already installed tidyverse
+
+# 3.1 Basics of Plotting using ggplot()
+# ggplot is very similar to stacking arguments like pivot_() or _join()
+
+# 1st start with ggplot()
+# ggplot is very asthetic
+# to pass asthetic argumetns use the aes() argument 
+
+# making our first ggplot using the Global.Deaths we used earlier
+
+ggplot(data = global_deaths_day, aes(x = Date, y = Global.deaths))
+
+# we haven't actually plotted anything just yet 
+# we haven't told ggplot to plot anything, also the x axis looks really bad here
+
+# lets try again by using a scatter plot, they're good for visualising the data to begin with 
+# trying again 
+
+## make a ggplot object
+ggplot(data = global_deaths_day, aes(x = Date, y = Global.deaths)) + 
+  ##add a geom to that object (in this case geom_point)
+  ## notice the + after the ggplot() argument which allows us to 
+  ##split this over multiple lines
+  geom_point()
