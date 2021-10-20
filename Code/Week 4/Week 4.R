@@ -209,7 +209,7 @@ tail(pop_2020)
 
 library(countrycode)
 
-?countrycode
+?countrycode #what is country code? 
 
 covid_country$code <- countrycode()
 
@@ -250,8 +250,7 @@ pop_2020 %>% filter(iso3c == "AFG")
 # rename the 5th column of the pop data so it works:
 names(pop_2020)[5] <- "value"
 
-# demonstartation of what select does: 
-
+# demonstration of what select does: 
 head(pop_2020 %>% select(iso3c, value))
 
 
@@ -339,18 +338,18 @@ global_deaths_day <- covid_country%>% # so we have assigned the global_deaths fr
   summarise("Global.deaths" = sum(Deaths)) 
 
 
-# Lets make a quick check to ensure we dont have any issues in the data (like NAs):
+# Lets make a quick check to ensure we don't have any issues in the data (like NAs):
 which(is.na(global_deaths_day$Global.deaths)) 
 
-# Great, it doesnt seem like we have any NAs (otherwise the calculation about would 
+# Great, it doesn't seem like we have any NAs (otherwise the calculation about would 
 # be a series of numbers corresponding to the rows in which those NA values are). 
 # We can trivially remove any NA’s in our data using the na.rm=T argument:
 
-# makine a new data frame of the global deaths using group_by() and summarise()
+# making a new data frame of the global deaths using group_by() and summarise()
 
 global_deaths_day_1 <- covid_country %>%
   group_by(Date) %>% 
-  summarise("Global.deaths" = sum(Deaths, na.rm = T)) # removing the NA values
+  summarise("Global.deaths" = sum(Deaths, na.rm = T)) # removing the NA values wiht na.rm = T
 
 # 2.7 Deaths Per Million people:
 # This normalised death rate allows us to compare the reate of increase in deaths
@@ -395,3 +394,241 @@ ggplot(data = global_deaths_day, aes(x = Date, y = Global.deaths)) +
   ## notice the + after the ggplot() argument which allows us to 
   ##split this over multiple lines
   geom_point()
+
+# Checking the data again: 
+global_deaths_day
+
+# The date is being treated as a character vector and is thus plotting them in 'order' ( 0 -> 9)
+
+# We need to tell R that the column is full of dates. This is also why ggplot() has plotted every 
+# single value of the “Date” column - it doesnt know how to simplfy this data and so just presents 
+# all of it as if it were a categorical variable. ]
+# We can solve these issues using as.Date() from base R:
+
+# telling R that the tata is a date: 
+# need to specify the format the date data are given in using "%m/%d/%y" 
+## (see ?as.Date for help on what this means)
+
+global_deaths_day$Date.corrected <- as.Date(
+  global_deaths_day$Date, format = "%m/%d/%y")
+
+# Now if we try to plot these data again: using or new column of corrected dates we get: 
+
+ggplot(data = global_deaths_day, aes(x = Date.corrected, y = Global.deaths)) + geom_point()
+
+# Now the data are visually looking good 
+
+# 3.3 The power of geom_..()
+# Geoms
+# geoms can stack assuming they can be plotted on the same axis, and we don't have to recode anything 
+
+
+## a scatter plot
+ggplot(data = global_deaths_day, aes(x = Date.corrected, y = Global.deaths)) + 
+  ## points
+  geom_point()
+## a line plot
+ggplot(data = global_deaths_day, aes(x = Date.corrected, y = Global.deaths)) + 
+  ## lines
+  geom_line()
+
+# so above we now have two graphs: a plotted scatter graph and a line graph 
+
+
+## a scatter and line plot
+ggplot(data = global_deaths_day, aes(x = Date.corrected, y = Global.deaths)) + 
+  ## points
+  geom_point(col = "darkgrey") +
+  ## and lines! 
+  geom_line(col = "red") 
+
+# the above combined poth a point and a line graph, specifying differnt colours 
+# you're able to distinguish between them on the plot
+# you can manually choose the colour using 'col ='
+# ggplot will layer the lines/points/etc in the order you specify 
+
+ggplot(data = global_deaths_day, aes(x = Date.corrected, y = Global.deaths)) + 
+  geom_line(col = "red") +
+  geom_point(col = "darkgrey") 
+
+# Lots of geoms @ < https://ggplot2.tidyverse.org/reference/ > 
+
+# 3.3 Splitting up your ggplot arguments
+# Complex plots are facilitated by the splitting your ggplot() arguments across multiple statements
+
+# make the ggplot an object:
+
+p1 <- ggplot(data = global_deaths_day, aes (x = Date.corrected, y = Global.deaths))
+
+# add the graphic (in this case )
+
+p1 <- p1 + geom_line()
+
+p1 + geom_point()
+
+# You can also make two verions of the same graphic which are a little different
+# and then compare how they look: 
+
+p1 <- ggplot(data = global_deaths_day, aes (x = Date.corrected, y = Global.deaths))
+
+p1 <- p1 + geom_line()
+
+p2 <- p1 + geom_point()
+
+p1
+p2
+
+# 3.4 Grouped Data: 
+# most powerful element of ggplot is the way it deals with grouped data
+# most data aren't as simple as above 
+
+# under the superficial code you see and use it accesses all the tools of the tidyverse
+# and thus can group and segregate data really efficiently to plot it 
+
+# moving to our more complex data set: 
+
+covid_w_pop
+
+# Now we want to plot the data by country so we can visualise how the virus has spread over time 
+# in different places across the world 
+# there are a couple of ways of doing this in ggplot()
+
+# 3.4.1 
+# Colors:
+
+# the first is to set some of the aesthetics of the plot to reflect the fact that 
+# these are groups within data.
+
+# Create a new column in the covid_w_pop data which contains the datae in the correct format 
+
+covid_w_pop$Date.corrected <- as.Date(
+  covid_w_pop$Date, format = "%m/%d/%y")
+
+names(covid_w_pop)[7] <- "Date.corrected"
+
+covid_w_pop      
+
+
+
+# making a new ggplot graph:
+
+by_country <- ggplot(data = covid_w_pop, aes(x = Date.corrected, y = Deaths))
+by_country
+
+# We want to add points to this colored by different countries 
+# ggplot() can do this automatically using another aesthetic 
+# argument - col. 
+
+# Then we want to add points to this coloured by the 
+# different countries. ggplot() can do this automatically 
+# using another aesthetic argument - col. We used col above 
+# to specify a single colour for a set of points/lines, but 
+# if we put it inside the aesthetics argument aes() then we 
+# can make ggplot automatically assign colours 
+# remember specifying columns via aes() means ggplot looks 
+# in our data for a column matching that name, like it did 
+# for the x and y variables. So below we tell ggplot to look f
+# or a column called Country.Region in our data frame, and 
+# then assign a different colour (col) to each of the groups 
+# of data in Country.Region:
+
+by_country + geom_point(aes(col = Country.Region))
+
+# You can't see this plot because the legend is so big 
+# theme() allows us to change a load of the visual aspects
+# without interfering with the data being plotted 
+
+# making the ggplot object
+
+by_country + geom_point(aes(col = Country.Region)) + theme(legend.position = "none")
+
+# Now we can see the ggplot() can be with really complex data
+# A very simple argument aes(col = Country.Region) has made a 
+# plot with all data from all countries plotted together 
+
+# it is messy though: 
+# make a vector of countries we want to look at: 
+
+selec_countries <- c("United Kingdom", "China", "US", "Italy", "France", "Germany")
+
+# use this to filter by for our plot. here using the " %in% " operature: 
+
+sel_country_plot <- ggplot(data = covid_w_pop %>%
+                             filter(Country.Region %in% selec_countries),
+                           aes(x = Date.corrected, y = Deaths))
+
+sel_country_plot + geom_line(aes(col = Country.Region))
+
+# the above is a little complicated but read through it over and it does make a lot of sense
+# 1. when you use the aes() in any of the functions of ggplot() (eg. geom_line()) it will
+# look in the data specified when setting up the original ggplot() 
+# you don't need to tell it to look in that data each time you add a new funciton 
+
+# 2. this is what happens when you try to plot a line plot that has groups of data,
+# but you don't tell ggplot() that it has groups of data: 
+
+## with no grouping
+sel_country_plot + geom_line()
+# ggplot() will plot the data, but there will be a single 
+# line connecting all of the data points 
+# (this is why I tend to plot data out with geom_point() 
+# for initial visualization).
+
+# 3.4.1.2 point/line types 
+# you can alter the asthetics of either the points or lines which are plotted for each country.
+# again, ggplot makes this easy 
+
+# set line type by country:
+
+sel_country_plot + geom_line(aes(linetype = Country.Region))
+
+# set line TYPE by country:
+sel_country_plot + geom_point(aes(shape = Country.Region))
+
+# 3.4.2 Faceting:
+# The other major way to plot grouped data is to spread the data
+# use facets to spread data across different sub-plots 
+
+# facet_wrap() or facet_grid() can take up to two groups to facet by 
+# facet_grid() forces the plots to be on a grid
+# facet_wrap puts them onto a grid but allows the positions to not be determined by the groups
+
+# Because you aren’t speficying an aesthetic you dont need 
+# the aes() argument for the facet_() functions but you need 
+# to use the ~ operature - which in R speak means “as a function 
+# So we want to facet our data as a function of Country.Region. 
+# If you have two groups to facet by, you specify them as facet_wrap(x ~ y).
+# In our case we only have one, so we replace the x with a .:
+
+# facet the data by country:
+sel_country_plot + geom_line() + facet_wrap(. ~ Country.Region)
+# split up the data, keeping the axis the same though 
+# we can also now stack arguments 
+
+# facet the data by country:
+sel_country_plot + geom_line(aes(col = Country.Region)) + facet_wrap(. ~Country.Region)
+# so the data that has been plotted similarly, you've just set the aesthetic to vary between plots 
+
+# 3.5 Saving Plots 
+# save plots using the pdf function
+?pdf()
+
+# the best way is to save the load
+
+# The pdf() function is a little unusual in that we run it to 
+# start R making a pdf, then we run out code which prints our 
+# plot, and then we use dev.off() to stop the pdf() function 
+# and finish making the pdf:
+
+##specify the directory and name of the pdf, and the width and height
+pdf("C:/Users/fg17761/OneDrive - University of Bristol/Bioinformatics MSc/Term 1/Programming in R/GitHub/bioinformatics/Code/Week 4/Week 4.R.pdf", width = 6, height = 4)
+
+##run your code to print your plot
+sel_country_plot + 
+  ##add lines
+  geom_line(aes(col = Country.Region)) + 
+  ##add facets
+  facet_wrap(. ~ Country.Region)
+
+##stop the pdf function and finish the .pdf file
+dev.off()
