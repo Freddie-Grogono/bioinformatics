@@ -176,6 +176,24 @@ Change a file from wide to long format	      | 	pivot_longer()
 Change a file from long to wide format       	| 	pivot_wider()
      
 
+
+Function/operator	Call
+Join data sets	…_join()
+Make a data frame into a tibble	as_tibble()
+Filter out certain data	filter()
+Apply tidyverse functions to grouped data	group_by()
+Extract summary data (e.g. mean)	summarise()
+Find and set country code data	countrycode()
+Show the numerical position in a vector of logical operators	which()
+Add together values in a vector	sum()
+Make a ggplot object	ggplot()
+Make a scatter plot	geom_point()
+Make a line plot	geom_line()
+Adjust theme of ggplot object	theme()
+Plot grouped data on different plots	facet_wrap()
+Make a .pdf file of a plot	pdf()
+
+
 ---
 title: "R Cheat Sheet"
 author: "Freddie Grogono"

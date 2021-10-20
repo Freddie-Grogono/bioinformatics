@@ -621,7 +621,7 @@ sel_country_plot + geom_line(aes(col = Country.Region)) + facet_wrap(. ~Country.
 # and finish making the pdf:
 
 ##specify the directory and name of the pdf, and the width and height
-pdf("C:/Users/fg17761/OneDrive - University of Bristol/Bioinformatics MSc/Term 1/Programming in R/GitHub/bioinformatics/Code/Week 4/Week 4.R.pdf", width = 6, height = 4)
+pdf("../Plots/Week 4/sel_country_plot.pdf", width = 6, height = 4)
 
 ##run your code to print your plot
 sel_country_plot + 
@@ -632,3 +632,5 @@ sel_country_plot +
 
 ##stop the pdf function and finish the .pdf file
 dev.off()
+
+
