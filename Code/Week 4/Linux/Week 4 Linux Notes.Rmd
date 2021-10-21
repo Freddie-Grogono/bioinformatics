@@ -2,26 +2,30 @@
 title: "Week 4 Linux Notes"
 author: "Freddie Grogono"
 date: "21/10/2021"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 # Login
 
 To login into Linux do:
 
-Username: ** fg17761@bc4login.acrc.bris.ac.uk **
+Username: ** ssh fg17761@bc4login.acrc.bris.ac.uk **
 Then: ** university password **
 
 # Directories
-Pathnames and (/)
+- Pathnames and (/)
+  - divider for the path.
+- The Directories . and ..
 
-- divider for the path.
-The Directories . and ..
-- Current and previous disrectories.
-Home directories (~)
+Current and previous disrectories.
+- Home directories (~)
 - Tilde represents a user’s home directory.
-Finding where you are (pwd) 
+
+Finding where you are (pwd):
 - Command to print working directory
+
 Changing to a different Directory (cd)
 - Command to change directory
 
@@ -30,26 +34,12 @@ New Files and Directories
 - Making Directories (mkdir)
 
 Tip:
-You can use clear or ctrl+l in terminal to clear the termin
-al screen to make it easy to follow
+- using cd ~ will take you to your home directory in Linux
+- You can use clear or ctrl+l in terminal to clear the terminal screen to make it easy to follow
 
-Make a new directory in the intro_to_linux directory
 
-Change into that directory:
-[zu18506@bc4login1 ~]$ cd intro_to_linux/
+## File Manipulation
 
-Check whats in there:
-[zu18506@bc4login1 intro_to_linux]$ ls
-
-authors  example.txt
-
-Create the new directory and check it’s there:
-[zu18506@bc4login1 intro_to_linux]$ mkdir create
-[zu18506@bc4login1 intro_to_linux]$ ls
-
-authors  create  example.txt
-
-File Manipulation:
 - Copying Files (cp)
 - Moving Files (mv)
 - Removing Files and directories (rm)
@@ -57,7 +47,9 @@ File Manipulation:
 Warning:
 - Using rm cannot be undone, it is a permanent delete.
 
-Examining File Contents:
+
+## Examining File Contents
+
 - Displaying the contents of a file on the screen (cat, less)
 - The first lines in a file (head)
 - The last lines in a file (tail)
@@ -70,14 +62,13 @@ Tip:
 u to page up, space to page down, q to quit
 ctrl + c This shortcut will abort the execution of a program. Use it to get back to the terminal, if you get stuck using a command.
 
-Filenames
+
+## Filenames
+
 Wildcards
-
-? Any one character
-
-e.g. ab? will match aba, abb, ab1, ab2 and so on, for all letters and numbers (a-z, 0-9), but won’t match ab
-
-* Zero or more characters.
+- ? Any one character
+-e.g. ab? will match aba, abb, ab1, ab2 and so on, for all letters and numbers (a-z, 0-9), but won’t match ab
+- * Zero or more characters.
 
 e.g. ab* will match ab, abb, abbbbb, abc, abbbcd1, etc
 
@@ -91,36 +82,39 @@ Make sure that there is NO space between the star * and the dot .
 rm * .txt (will permanently delete ALL files in current directory.)
 
 
-Getting Help
+## Getting Help
+
 man :to display the page manual
 man -k :displays a list of topics in pages related to the query
 Google (other search engines are available)
 
-Tip
-Remember q to quit, / to search a pattern.
-In addition to man command, commands usually print help using flags -h and/or --help
-e.g. command -h and/or command --help
+Tip:
+- Remember q to quit, / to search a pattern.
+- In addition to man command, commands usually print help using flags -h and/or --help
+- e.g. command -h and/or command --help
 
-Note
-Not every command has a manual page or support for help flags.
+Note:
+- Not every command has a manual page or support for help flags.
 They may support, all, some or none of those options.
 
 
-Maniputaing Files:
+## Manipulating Files:
 - sort sorts the lines of a text file line by line
 - uniq searches for and removes duplicate lines in a file
 
-Tip
+Tip:
 - uniq considers an entry to be duplicated, only if they are in adjacent lines.
 - sort and uniq are often used in combination
 
 
-Redirection:
-Redirecting the Output
-> (overwrites)
->> (appends)
-Redirecting the Input
-<
+## Redirection:
+
+Redirecting the Output:
+- > (overwrites)
+- >> (appends)
+
+Redirecting the Input:
+- <
 
 Warning:
 Overwriting a file will destroy its content.
@@ -128,17 +122,34 @@ e.g. command > filename.ext
 If file filename.ext does not exist, it will be created. 
 If it exists, its content will be replaced by the output of command
 
-Pipes and Pipelines:
-Take the standard output of one command and feed it in to the standard input of the next
-Uses the pipe (vertical bar) symbol ‘|’
-No intermediate files!
-Efficient
+## Pipes and Pipelines:
 
-Text Editors:
-Not Word
-vim is mentioned a lot but don’t use just yet
-We recommend nano
-^O to save
-^X to exit
+- Take the standard output of one command and feed it in to the standard input of the next
+- Uses the pipe (vertical bar) symbol ‘|’
+- No intermediate files!
+- Efficient
 
+## Text Editors:
+- Not Word
+- vim is mentioned a lot but don’t use just yet
+- We recommend nano:
+  - ^O to save
+  - ^X to exit
+
+
+Commands      | Output:
+------------- | ------------- 
+ssh | secure shell 
+pwd | print working directory 
+cd  |current directory 
+ls  | list 
+mkdir | make directory 
+rm -d | delete directory 
+| | a pipe, good for making things happen the way you want them to in ur brain m8 
+
+
+## Useful Links:
+
+
+- ** regex101.com ** 
 
