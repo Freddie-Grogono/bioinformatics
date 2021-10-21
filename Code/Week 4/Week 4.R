@@ -22,7 +22,7 @@
 
 # Task: load in the Covid_19 Data from last week:
 # Installing 'devtools' package
-install.packages("devtools", dependencies = TRUE)
+# install.packages("devtools", dependencies = TRUE)
 
 # Installing the 'devtools' package
 library("devtools")
@@ -324,7 +324,7 @@ pop_2020 %>% filter(country=="Afghanistan")
 # in the most recent date in the data frame 
 
 most_recent <- covid_country%>% # defining what the most recent year is 
-  filter(Date == max(covid_country$Date)) # using the fitler function to find this 
+  filter(Date == max(covid_country$Date)) # using the filter function to find this 
 
 sum(most_recent$Deaths) # then summing the final year of data cumulative deaths 
 
@@ -632,6 +632,9 @@ sel_country_plot +
 
 ##stop the pdf function and finish the .pdf file
 dev.off()
+
+# Think about what sorts of questions you want to ask:
+
 
 
 
