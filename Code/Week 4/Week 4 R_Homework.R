@@ -39,14 +39,7 @@ long_spp$date <- ymd(long_spp$date)
 long_spp$year <- as.numeric(as.character(long_spp$date, "%Y"))
 
 
-
-
-# filter for the unique species: 
-unique_species <- unique(long_spp$species)
-unique_species
-
-
-# plotting the all specie's abundancies across all years:
+# plotting the all specie's abundance across all years:
 total_population_abundance_over_all_time <- ggplot(data= long_spp, aes (x = year, y = abundance)) + 
   geom_point(aes(col = species)) + 
   geom_line(aes(col = species)) + 
@@ -55,44 +48,53 @@ total_population_abundance_over_all_time <- ggplot(data= long_spp, aes (x = year
 total_population_abundance_over_all_time
 
 
-total_population_abundance_over_all_time_2 <- ggplot(data= long_spp, aes (x = year, y = abundance)) + 
+# effect of primary threat on abundance over time: 
+total_population_abundance_over_all_time_primary <- ggplot(data= long_spp, aes (x = year, y = abundance)) + 
   geom_point(aes(col = species)) + 
   geom_line(aes(col = species)) +
   facet_wrap(. ~ primary_threat ) +
   theme(legend.position = "none")
 
-total_population_abundance_over_all_time_2
+total_population_abundance_over_all_time_primary
 
-# filtering to different threats: 
+# effect of primary threat on abundance over time for population 1: 
+total_population_abundance_over_all_time_primary_1 <- ggplot(data= long_spp %>% filter(population == "pop_1"),
+  aes (x = year, y = abundance)) + 
+  geom_point(aes(col = species)) + 
+  geom_line(aes(col = species)) +
+  facet_wrap(. ~ primary_threat ) +
+  theme(legend.position = "none")
+
+total_population_abundance_over_all_time_primary_1
+
+# effect of primary threat on abundance over time for population 2:
+total_population_abundance_over_all_time_primary_2 <- ggplot(data= long_spp %>% filter(population == "pop_2"),
+                                                                aes (x = year, y = abundance)) + 
+  geom_point(aes(col = species)) + 
+  geom_line(aes(col = species)) +
+  facet_wrap(. ~ primary_threat ) +
+  theme(legend.position = "none")
+
+total_population_abundance_over_all_time_primary_2
 
 
 
-primary_threat_population <- long_spp%>% 
-  filter(primary_threat == "Pollution") 
+# effect of tertiary threat on abundance of population 1, over time:
+total_population_abundance_over_all_time_secondary_1 <- ggplot(data= long_spp %>% filter(population == "pop_1"), aes (x = year, y = abundance)) + 
+  geom_point(aes(col = species)) + 
+  geom_line(aes(col = species)) +
+  facet_wrap(. ~ secondary_threat ) +
+  theme(legend.position = "none")
 
-primary_threat_habitat_destruction <- long_spp%>% 
-  filter(primary_threat == "Habitat destruction") 
+total_population_abundance_over_all_time_secondary_1
 
-primary_threat_exploitation<- long_spp%>% 
-  filter(primary_threat == "Exploitation") 
+# effect of tertiary threat on abundance in population 2, over time:
+total_population_abundance_over_all_time_tertiary_2 <- ggplot(data= long_spp %>% filter(population == "pop_2"), aes (x = year, y = abundance)) + 
+  geom_point(aes(col = species)) + 
+  geom_line(aes(col = species)) +
+  facet_wrap(. ~ tertiary_threat ) +
+  theme(legend.position = "none")
 
-primary_threat_climate_change <- long_spp%>% 
-  filter(primary_threat == "Climate change") 
+total_population_abundance_over_all_time_tertiary_2
 
-primary_threat_habitat_fragmentation <- long_spp%>% 
-  filter(primary_threat == "Habitat fragmentation") 
 
-primary_threat_habitat_loss <- long_spp%>% 
-  filter(primary_threat == "Habitat loss") 
-
-primary_threat_effects <- c(
-  
-  
-
-primary_threat_effect_on_abundance_over_time <- ggplot(data = long_spp, aes (x = year, y = abundance)) +
-  geom_point(aes(col = ))
-  
-total_population_abundance_over_all_time <- ggplot(data= long_spp, aes (x = year, y = abundance)) + 
-  geom_point(aes(col = s))
-
-total_population_abundance_over_all_time
