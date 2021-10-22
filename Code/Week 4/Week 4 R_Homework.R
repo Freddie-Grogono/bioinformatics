@@ -42,8 +42,7 @@ long_spp$year <- as.numeric(as.character(long_spp$date, "%Y"))
 # plotting the all specie's abundance across all years:
 total_population_abundance_over_all_time <- ggplot(data= long_spp, aes (x = year, y = abundance)) + 
   geom_point(aes(col = species)) + 
-  geom_line(aes(col = species)) + 
-  theme(legend.position = "none")
+  geom_line(aes(col = species)) 
 
 total_population_abundance_over_all_time
 
@@ -58,22 +57,29 @@ total_population_abundance_over_all_time_primary <- ggplot(data= long_spp, aes (
 total_population_abundance_over_all_time_primary
 
 # effect of primary threat on abundance over time for population 1: 
-total_population_abundance_over_all_time_primary_1 <- ggplot(data= long_spp %>% filter(population == "pop_1"),
-  aes (x = year, y = abundance)) + 
-  geom_point(aes(col = species)) + 
+total_population_abundance_over_all_time_primary_1 <- ggplot(
+  data= long_spp %>% filter(population == "pop_1"), 
+  aes (x = year, y = abundance)) +
+  geom_point(aes(col = species)) +
   geom_line(aes(col = species)) +
   facet_wrap(. ~ primary_threat ) +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  ggtitle("Effect of Primary Threat on Abundance of Population 1 over Time") +
+
+  
+
 
 total_population_abundance_over_all_time_primary_1
 
 # effect of primary threat on abundance over time for population 2:
-total_population_abundance_over_all_time_primary_2 <- ggplot(data= long_spp %>% filter(population == "pop_2"),
-                                                                aes (x = year, y = abundance)) + 
+total_population_abundance_over_all_time_primary_2 <- ggplot(data= long_spp %>% filter(population == "pop_2"), aes (x = year, y = abundance)) + 
   geom_point(aes(col = species)) + 
   geom_line(aes(col = species)) +
   facet_wrap(. ~ primary_threat ) +
-  theme(legend.position = "none")
+  theme(legend.position = "none") +
+  
+  theme(plot.title = element_text(hjust = 0.5))
+        
 
 total_population_abundance_over_all_time_primary_2
 
