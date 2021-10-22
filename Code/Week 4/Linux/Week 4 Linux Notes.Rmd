@@ -146,7 +146,21 @@ ls  | list
 mkdir | make directory 
 rm -d | delete directory 
 | | a pipe, good for making things happen the way you want them to in ur brain m8 
+ls | list all
+nano | open an exsiting file or make an new one 
 
+# GREP:
+Cheat sheet for regular expressions: < https://cheatography.com/davechild/cheat-sheets/regular-expressions/ >
+
+(*) | wildcard (match anything following the letter)
+
+Examples of GREP:
+grep t*.txt = give me all the text files with the letter t in them 
+ls *txt = give me all the files that are text files 
+? = exactly one of anything
+ls c*n = list all of the things that start with c and end with n 
+
+file extensions aren't hugely important in Linux 
 
 ## Useful Links:
 
