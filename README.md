@@ -17,7 +17,7 @@ The data for the following workshops has been taken from [Chris Clements GitHub]
 
 The following links will take you to code that has been created thus far in the course:
 
-To get to the **Week 1 Homework Answers** [Click Here](CCode/Week%201/Week%201%20Homework%20Code)
+To get to the **Week 1 Homework Answers** [Click Here](Code/Week%201/Week%201%20Homework%20Code.R)
 
 To get to the **Week 2 R Markdown** [Click Here](Code/R%20Markdown%20Cheat%20Sheet.Rmd)
 
