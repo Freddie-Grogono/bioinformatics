@@ -301,7 +301,7 @@ names(covid_w_pop)[which(names(covid_w_pop) == "value")] <- "Population"
 
 names(covid_w_pop)[5] # checking this you can now see the name has been changed
 
-# Another quick visual check filtering out a single coutry from each data set 
+# Another quick visual check filtering out a single country from each data set 
 # and visually check that the population data are the same in each:
 
 ## quick visual check
@@ -562,7 +562,7 @@ sel_country_plot + geom_line(aes(col = Country.Region))
 # the above is a little complicated but read through it over and it does make a lot of sense
 # 1. when you use the aes() in any of the functions of ggplot() (eg. geom_line()) it will
 # look in the data specified when setting up the original ggplot() 
-# you don't need to tell it to look in that data each time you add a new funciton 
+# you don't need to tell it to look in that data each time you add a new function 
 
 # 2. this is what happens when you try to plot a line plot that has groups of data,
 # but you don't tell ggplot() that it has groups of data: 

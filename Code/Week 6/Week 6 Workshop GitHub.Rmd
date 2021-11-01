@@ -1,0 +1,104 @@
+---
+title: "Practical 5"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    number_sections: true
+    toc_depth: 3
+---
+
+
+# Statistics in R
+## Pre-sessaion reading
+### Learning Objectives
+Today we are going to:
+  + Refresh some basic statistics (normal distribution, comparing means, etc).
+  - Learn what a GLM is, and how it relates to simple statistics like linear regressions
+  + Learn what error distributions are  
+  + Learn what link functions are  
+  + Learn what to do when we don’t have normally distributed data  
+  + Learn what error distributions should be considered for count data  
+  + Learn how to fit a GLM  
+  + Learn how to visualise residuals (difference between predicted and observed)  
+  + Learn how to tell if a model is fitting our data well  
+  + Learn how to explore alternative models  
+  + Learn how to compare models  
+  + Learn how to interpret model summaries  
+ 
+## Statistics in R 
+### Re-cap
+Remember:  
+  + Hypothesis testing and the Null hypothesis  
+  + The normal/gaussian distribution  
+  + The difference between the x and y variables  
+  + The concept of a “best fit line”  
+  + The concept of a linear regression  
+  + The difference between categorical and continuous data  
+  + The terms predictor variable, response variable, variance, residuals, slope  
+
+## GLM
+### Generalised Linear Models: 
+These are powerful as they allow you to specify the error distribution of your model (e.g. gaussian, poisson, etc) and link function (e.g. identity, log, etc). 
+The errors can also be either normally or non-normally distributed which is a crucial element 
+
+
+
+#  Practical 
+## GLM with categorical predictors 
+
+loading the iris data set: 
+data("iris")
+
+Plot the sepal widths so we can visualise if there are differences between the different species
+
+``` {r}
+library(ggplot2)
+```
+
+```{r}
+ggplot(iris, aes( x = Species, y=Sepal.Width)) + geom_jitter(aes(col = Species)) + theme_bw()
+```
+
+Fab, it looks as though there are some differences between the species, especially between setosa and the other two...
+We not want to compare the variance and the means of Sepal.Width between the three species to establish if these differences are down to chance or whether probability suggests taht these differences are really there between the species. 
+
+Lets use a histogram for seeing whether the data are normally distributed, and are (lukcily) easty to do with ggplot. 
+
+```{r}
+ggplot(iris, aes(x = Sepal.Width, fill = Species)) +
+  ## bin width determines how course the histogram is
+  ## the alpha determines the transparency of the bars
+  ## position allows you to determine what kind of histogram you plot (e.g. stacked vs overlapping). try changing to position="stack"
+  geom_histogram(binwidth = .1, alpha = .5, position="identity")
+
+```
+
+So from the above we can visualize:
+
+1. how normally distributed the three sets of data are (the good news is they look fairly normal)  
+2. approximately how overlapping they are, and thus how likely they are to have statistically different means. This gives us a good check in case we get something unexpected in stats later.  
+
+## Fitting a GLM 
+We want to test whether there is any significant difference between the mean sepal widths of the three species. This means we have a continuous response (y) variable, and a categorical predictor (x) variable. 
+This makes the coding for our GLM nice and simple. We have visually checked the data and there doesn't appear to be any obvious issues with it.
+
+GLM is a base function in R, so we don't need to load packages:
+
+```{r}
+##fit a glm()
+mod_iris <- glm(Sepal.Width ~ Species,
+            ##specify the data
+            data = iris,
+            ##specify the error structure
+            family = "gaussian")
+```
+
+We specify the formula of the model using ‘~’
+First term is the dependant (y/response) variable
+The following term/terms is/are the independant (x/predictor) variables
+
+So Sepal.Width is our dependent variable, Species is our independent variable. 
+
+**Hint** - you can read ~ in R as “as a function of”. So in this case, we are testing whether the Sepal.Width changes as a function of species
+
