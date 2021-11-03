@@ -75,11 +75,7 @@ library(multcomp)
   
 ## run the multiple comparisons, and look at the summary output:
 summary(glht(mod_iris, mcp(Species="Tukey")))
-
-
-
-
-
+____________________________________________________________
 ____________________________||______________________________
 # GLM with Continuous predictors 
 # Working on a single population time series from the species data you plotted for homework last week
@@ -326,5 +322,35 @@ plot(mod3)
 
 # summarise the model output: 
 summary(mod3)
+# In depth explanation of this on: < https://data.library.virginia.edu/diagnostic-plots/ >
+# The guassian distribution is not specifically formulated for count data 
+# It assumes that error values are going to be continuous, whereas 
+# we know thta isn't the case with out data 
 
+# Model Summaires and Ouptut
+summary(mod3)
+# there is a significant negative effect of standardised_time on the dependent variable (abundance)
+# there is a decrease of ~0.003 individuals per week over the time series 
+# lets plot the ouput of this model, a great way to visualize
+# how well it fits the data and is ideal for things like publications and to communicate the results of your analyses
 
+p6 <- ggplot(single_spp, aes( x = standardised_time,
+                              y = abundance)) +
+  geom_point() +
+  geom_line() +
+  theme_bw() +
+  ylab("Abundance") +
+  xlab("standardised_time")
+
+# then use the geom smooth() to add the regression to the plot.
+# unlike earlier here we specify the model type (Glm), the formula and the error structure and link:
+p6 <- p6 + geom_smooth(data = single_spp,
+                       method = "glm",
+                       method.args = list(family = gaussian(link = "log")),
+                       formula = y ~ x,
+                       col = "dodgerblue",
+                       fill = "lightblue")
+
+p6     
+
+# You can see that ggplot() conveniently calculates the confidence intervals around the line, giving us a nice visualization of the fitted model.
