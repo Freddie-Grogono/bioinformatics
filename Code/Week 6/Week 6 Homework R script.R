@@ -61,6 +61,12 @@ GDP_And_Medals
 # Now rank the countries based on their total points, in descending order 
 GDP_And_Medals$Rank<-rank(desc(GDP_And_Medals$Total_Points))
 
+# Found a new method of ordering them based on what the olympic medals table actually means: i.e. ranked on the no. Gold then no. Silver then no.Bronze 
+GDP_And_Medals <-GDP_And_Medals[order(-GDP_And_Medals$Gold, -GDP_And_Medals$Silver, -GDP_And_Medals$Bronze),]
+
+# Using the index to give the countries and ID 
+GDP_And_Medals <- tibble::rowid_to_column(GDP_And_Medals, "ID")
+
 # Visualize the relationship between GDP and position in the table: 
 #install the ggplot2 package
 install.packages("ggplot2")
@@ -68,7 +74,72 @@ install.packages("ggplot2")
 #use the ggplot 2 library 
 library(ggplot2)
 
+# Investigating an initial plot of medal ranking and GDP:
+p1 <- ggplot(GDP_And_Medals, aes(x = GDP,
+                                 y = ID)) +
+  geom_point() +
+  geom_line() +
+  theme_bw() +
+  ylab("Medal Ranking") +
+  xlab("GDP") 
 
-p1
+p1 + geom_smooth(method="loess")
+
+# It looks very messy 
+
+# Assessing the fit of a model:
+# Mod 1 is going to be the "gaussian" or normally distributed:
+mod1 <- glm(ID ~ GDP,
+                data = GDP_And_Medals,
+                family = "gaussian")
+
+# Mod 2 is going to be the "poisson" type:
+mod2 <- glm(ID ~ GDP,
+            data = GDP_And_Medals,
+            family = "poisson")
+
+# Mod 3 is the gaussian with the link being log:
+mod3 <- glm(ID ~ GDP,
+            data = GDP_And_Medals,
+            family = gaussian(link="log"))
+
+# Mod 4 is the gaussian link with inverse link:
+mod4 <- glm(ID ~ GDP,
+            data = GDP_And_Medals,
+            family = gaussian(link = "inverse"))
+
+AIC_mods <- AIC(mod1,
+                mod2,
+                mod3,
+                mod4)
+
+## rank them by AIC using the order() function
+AIC_mods[order(AIC_mods$AIC),]
+
+# create column of log residual and log predicted 
+
+# go with inverse (4)
+
+GDP_And_Medals$pred_gaussian_log <- predict(mod3,
+                                        type = "response")
+
+GDP_And_Medals$resid_gaussian_log <- resid(mod3)
 
 
+p2 <- ggplot(GDP_And_Medals, aes ( x = GDP,
+                               y = ID)) +
+  geom_point() +
+  geom_line() +
+  theme_bw() +
+  ylab("Rank") +
+  xlab("GDP")
+
+# Now add in a line of predicted values from the model: 
+
+p2 <-  p2 + geom_line(aes(x = GDP,
+                          y = ID),
+                      col = "dodgerblue",
+                      size = 1)
+
+p2 <- p2 + ggtitle("Fitted model (gaussian with log link)")
+p2 # That looks like a good fit! 
