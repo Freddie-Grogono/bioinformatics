@@ -57,7 +57,7 @@ GDP_And_Medals_Final
 GDP_And_Medals_Final <-GDP_And_Medals_Final[order(-GDP_And_Medals_Final$Gold, -GDP_And_Medals_Final$Silver, -GDP_And_Medals_Final$Bronze),]
 
 # Using the index to give the countries a Rank:
-GDP_And_Medals_Final <- tibble::rowid_to_column(GDP_And_Medals, "Rank")
+GDP_And_Medals_Final <- tibble::rowid_to_column(GDP_And_Medals_Final, "Rank")
 
 #install the ggplot2 package
 install.packages("ggplot2")
@@ -102,6 +102,10 @@ mod4 <- glm(Rank ~ GDP,
             data = GDP_And_Medals_Final,
             family = gaussian(link = "inverse"))
 
+
+# gettting library gamlr
+library(gamlr)
+
 # Comparing the models:
 AIC_mods <- AIC(mod1,
                 mod2,
@@ -119,27 +123,41 @@ GDP_And_Medals_Final$pred_gaussian_log <- predict(mod4,
 #plotting the diagnostics plot for model 4
 plot(mod4)
 
-# creating a column forth residual Gaussian log
+# creating a column for residual Gaussian log
 GDP_And_Medals_Final$resid_gaussian_log <- resid(mod4)
 
 # plotting p1 with the geom line for the predicted Gaussian log
 
-p1
-p2 <- p1 + geom_line(aes(x = GDP,
-                   y = pred_gaussian_log),
-               col = "dodgerblue",
-               size = 1)
-p2
+p1 
 
+p2 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
+                                 y = Rank)) +
+  geom_point() +
+  theme_bw() +
+  ylab("Medal Ranking") +
+  xlab("GDP") +
+  geom_line(aes(x = GDP,
+                y = pred_gaussian_log),
+            col = "dodgerblue",
+            size = 1)
 
-p1_1 + geom_segment(aes(xend = GDP,
-                        yend = pred_gaussian_log),
-                    col = "lightblue") 
-  
-p_hist <- ggplot(GDP_And_Medals, aes(x = resid_gaussian_log)) + geom_histogram(fill = "goldenrod") + theme_minimal() 
+p3 <- p2 + geom_segment(aes(xend = GDP,
+                      yend = pred_gaussian_log),
+                  col = "lightblue") +
+  geom_smooth(data = GDP_And_Medals_Final,
+              method = "glm",
+              method.args = list(family = gaussian(link="log")),
+              formula = y~ x)
+              
+# Final plot of the model:
+p3
+
+# Looking at the residual histogram plot:
+p_hist <- ggplot(GDP_And_Medals_Final, aes(x = resid_gaussian_log)) + geom_histogram(fill = "goldenrod") + theme_minimal() 
 p_hist  
-  
-p_pred_resid <- ggplot(GDP_And_Medals, aes(x = pred_gaussian_log,
+
+# Investigating the residuals plot: 
+p_pred_resid <- ggplot(GDP_And_Medals_Final, aes(x = pred_gaussian_log,
                                            y = resid_gaussian_log)) +
   geom_point() +
   theme_minimal() +
@@ -147,8 +165,9 @@ p_pred_resid <- ggplot(GDP_And_Medals, aes(x = pred_gaussian_log,
 
 p_pred_resid
 
-qqnorm(GDP_And_Medals$resid_gaussian_log); qqline(GDP_And_Medals$resid_gaussian_log)
-
+# Qqnorm plot: 
+qqnorm(GDP_And_Medals_Final$resid_gaussian_log); qqline(GDP_And_Medals_Final$resid_gaussian_log)
+qqnorm
 
 
 
