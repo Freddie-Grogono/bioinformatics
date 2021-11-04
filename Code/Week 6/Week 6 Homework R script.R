@@ -142,4 +142,4 @@ p2 <-  p2 + geom_line(aes(x = GDP,
                       size = 1)
 
 p2 <- p2 + ggtitle("Fitted model (gaussian with log link)")
-p2 # That looks like a good fit! 
+p2 
