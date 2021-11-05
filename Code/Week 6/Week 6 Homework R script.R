@@ -48,7 +48,6 @@ Tokyo_Data$code[42] <- "TWN"
 GDP_And_Medals_Raw <- inner_join(Tokyo_Data, GDP_Data_Final, by = "code")
 GDP_And_Medals_Raw
 
-
 # Remove all of the NA values 
 GDP_And_Medals_Final <- na.omit(GDP_And_Medals_Raw)
 GDP_And_Medals_Final
@@ -73,13 +72,16 @@ p1 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
   ylab("Medal Ranking") +
   xlab("GDP") 
 p1
+# looks okay but could do with some logging perhaps of the GDP to make things more clear. 
 
 # Pseudo logging the GDP and adding a geom_smooth line
-p1 + 
+p2 <- p1 + 
   scale_x_continuous(trans="pseudo_log") + 
 
-    geom_smooth(method="loess")
-# It looks very messy 
+    geom_smooth(method="glm")
+
+p2
+# looks okay!
 
 # Assessing the fit of a model:
 # Mod 1 is going to be the "Gaussian" or normally distributed:
@@ -126,12 +128,77 @@ plot(mod4)
 # creating a column for residual Gaussian log
 GDP_And_Medals_Final$resid_gaussian_log <- resid(mod4)
 
-# plotting p1 with the geom line for the predicted Gaussian log
+# plotting with the geom line for the predicted Gaussian log
+p3 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
+                                       y = Rank)) +
+  geom_point() +
+  theme_bw() +
+  ylab("Medal Ranking") +
+  xlab("GDP") 
 
-p1 
+p3
+#applying the model to the plot (method = glm)
+p3 <-  p3 + 
+  scale_x_continuous(trans="log") + 
+  geom_smooth(method="glm") +
+  xlab("Medal Ranking") +
+  ylab("log_GDP") +
+  ggtitle( " Logged GDP Data")
+
+p3
+# I thought this was a good model. There is no residuals plotted but the data points are clear. 
+
+
+# This was the solution that you gave which I have adapted to my data:
+# I used a different method for sorting the data. When I 
+p3 <- ggplot(GDP_And_Medals_Final, aes(x=GDP, y=Rank)) + 
+  geom_point() + 
+  scale_y_continuous(trans='log10') + 
+  scale_x_continuous(trans='log10') + 
+  theme_bw() +
+  ggtitle("Logged data") +
+  
+
+p3
+
+
+## fit a model where both the x and y are logged:
+mod6 <- glm(Rank ~ GDP, data=GDP_And_Medals_Final)
+plot(mod6)
+## DOESNT LOOK GOOD!
+
+## fit a model where both the x and y are logged:
+mod7 <- glm(log10(Rank) ~ log10(GDP), data=GDP_And_Medals_Final)
+plot(mod7)
+
+##so, is there an effect?
+summary(mod7)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#_____________________________________________________||_______________________________________________
+# Random bits and pieces that I was trying out: 
+
+geom_smooth(data = GDP_And_Medals_Final,
+            method = "glm",
+            method.args = list(family = gaussian(link="log")),
+            formula = y~ x)
 
 p2 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
                                  y = Rank)) +
+  scale_x_continuous(trans = "log") +
   geom_point() +
   theme_bw() +
   ylab("Medal Ranking") +
@@ -140,6 +207,7 @@ p2 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
                 y = pred_gaussian_log),
             col = "dodgerblue",
             size = 1)
+p2
 
 p3 <- p2 + geom_segment(aes(xend = GDP,
                       yend = pred_gaussian_log),
@@ -147,7 +215,9 @@ p3 <- p2 + geom_segment(aes(xend = GDP,
   geom_smooth(data = GDP_And_Medals_Final,
               method = "glm",
               method.args = list(family = gaussian(link="log")),
-              formula = y~ x)
+              formula = y~ x) ++ geom_segment(aes(xend = GDP,
+                                                  yend = pred_gaussian_log),
+                                              col = "lightblue")
               
 # Final plot of the model:
 p3

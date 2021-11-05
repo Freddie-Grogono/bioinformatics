@@ -67,14 +67,37 @@ p1 <- ggplot(data = iris, aes(x = Petal.Length,
                               col = Species)) +
   geom_point() +
   geom_smooth(data = iris,
-              method = glm)
+              method = glm) +
+  
+
 p1
 
+# Starting Again:
+data(iris)
 
+##visualize the data
+iris1 <- ggplot(iris, aes(x = Petal.Length, y = Petal.Width)) + 
+  geom_point(aes(col = Species)) +
+  theme_bw()
 
+iris1
+iris1 + geom_smooth(aes(col = Species), method="lm")
 
+#running model one 
+mod1 <- glm(Petal.Width ~ Petal.Length*Species, data = iris)
 
+##set a 2x2 plot area, so we get a single pannel with 4 plots:
+par(mfrow = c(2, 2))
 
+##qqplot looks a bit uneven
+plot(mod1)
 
+##what about square root?
+mod3 <- glm(sqrt(Petal.Width) ~ Petal.Length*Species, data = iris)
 
+##this looks much better:
+plot(mod3)
+
+# 
+summary(mod3)
 
