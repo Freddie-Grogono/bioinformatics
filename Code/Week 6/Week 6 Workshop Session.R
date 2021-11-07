@@ -354,3 +354,36 @@ p6 <- p6 + geom_smooth(data = single_spp,
 p6     
 
 # You can see that ggplot() conveniently calculates the confidence intervals around the line, giving us a nice visualization of the fitted model.
+
+install.packages("usethis")
+library("usethis")
+
+## set your user name and email:
+usethis::use_git_config(user.name = "Freddie-Grogono", user.email = "fg17761@bristol.ac.uk")
+
+## create a personal access token for authentication:
+usethis::create_github_token() 
+##hit generate token (PAT) at the bottom of the page and copy it!
+
+## set personal access token:
+credentials::set_github_pat("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")
+
+## or store it manually in '.Renviron':
+usethis::edit_r_environ("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")
+## store your personal access token with: GITHUB_PAT=xxxyyyzzz
+## and make sure '.Renviron' ends with a newline
+
+# ----------------------------------------------------------------------------
+
+#### 4. Restart R! ###########################################################
+
+# ----------------------------------------------------------------------------
+
+#### 5. Verify settings ######################################################
+
+usethis::git_sitrep()
+
+
+
+
+

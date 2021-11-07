@@ -1,77 +1,111 @@
-# Week 6 Homework 
-
+---
+title: "Week 6 Rmarkdown"
+output: github_document
+---
 # Part 1 - Tokyo Olympics
-
 ## Is there a significant effect of a country's GDP on their position in the Olympics?
+### Installing packages and data
 
-
+Installing tidyverse and vroom 
+```{r}
 library(tidyverse)
 library(vroom)
+```
 
-#Install the Tokyo Medals Data 
+Install the Tokyo Medals Data:
+```{r}
 Tokyo_Data <- vroom("https://raw.githubusercontent.com/chrit88/Bioinformatics_data/master/Workshop%205/Tokyo%202021%20medals.csv")
+```
 
-# Install wbstats for access to the GDP data 
+Install wbstats for access to the GDP data 
+```{r}
 install.packages("wbstats")
 library(wbstats)
+```
 
-#Renaming the column so it is nicer to look at and easier to understand 
+Renaming the column so it is nicer to look at and easier to understand 
+```{r}
 my_indicators = c("GDP" = "NY.GDP.MKTP.CD")
-
-##extract the GDP data for all countries
+```
+Extract the GDP data for all countries
+```{r}
 GDP_Raw <- wb_data(my_indicators, 
                     start_date = 2020,
                     end_date = 2020)
-
-# Having a look at the data
+```
+Having a look at the data
+```{r}
 GDP_Raw
-# seems as though there are some columns we won't need, so let us get rid of those: 
+```
 
-# Getting rid of useless columns from the data set: 
+### Making it neater
+It seems as though there are some columns we won't need, so let us get rid of those: 
+Getting rid of useless columns from the data set: 
+```{r}
 GDP_Data <- subset(GDP_Raw, select = c(1, 2, 3, 4, 5, 9))
-GDP_Data 
-# Have a look, Yay it worked! 
-
+# Have a look
+GDP_Data
+# Yay it worked! 
+```
 
 ## Joining the two data sets: 
 
-# Now we need to join the 
-#Renaming row for join:
+Now we need to join the so let's rename one of the GDP_Data rows for the join:
+```{r}
 GDP_Data_Final<- rename(GDP_Data, code = iso3c)
+```
 
-# Adding a column to Tokyo Data containing country code:
+Adding a column to Tokyo Data containing country code:
+```{r}
 library(countrycode)
+```
 
-# Adding the iso3c column to the Tokyo Data enabling joining later on:
+Adding the iso3c column to the Tokyo Data enabling joining later on:
+```{r}
 Tokyo_Data$code <- countrycode(Tokyo_Data$Country, 
                                   origin = "country.name", 
                                   destination = "iso3c")
+```
 
-# Giving china the CHN
+Giving China the CHN
+```{r}
 Tokyo_Data$code <- sub("TWN", "CHN", Tokyo_Data$code)
 Tokyo_Data$code[42] <- "TWN"
+```
 
-# Joining the data:
+Joining the data using inner join :
+```{r}
 GDP_And_Medals_Raw <- inner_join(Tokyo_Data, GDP_Data_Final, by = "code")
 GDP_And_Medals_Raw
+```
+Looks good although we now have NA values too 
 
-# Remove all of the NA values 
+Remove all of the NA values 
+```{r}
 GDP_And_Medals_Final <- na.omit(GDP_And_Medals_Raw)
 GDP_And_Medals_Final
-
-# Ordering the data set based on how the olympic medal table ranking works: 
+```
+Ordering the data set based on how the olympic medal table ranking works: 
+```{r}
 GDP_And_Medals_Final <-GDP_And_Medals_Final[order(-GDP_And_Medals_Final$Gold, -GDP_And_Medals_Final$Silver, -GDP_And_Medals_Final$Bronze),]
+```
 
-# Using the index to give the countries a Rank:
+Using the index to give the countries a Rank:
+```{r}
 GDP_And_Medals_Final <- tibble::rowid_to_column(GDP_And_Medals_Final, "Rank")
+```
 
-#install the ggplot2 package
+### Getting ready to plot 
+install the ggplot2 package
+```{r}
 install.packages("ggplot2")
-
 # Use the ggplot 2 library 
 library(ggplot2)
+```
 
-# Investigating an initial plot of medal ranking and GDP:
+## Plotting 
+Investigating an initial plot of medal ranking and GDP:
+```{r initial plot, echo=FALSE}
 p1 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
                                  y = Rank)) +
   geom_point() +
@@ -79,65 +113,88 @@ p1 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
   ylab("Medal Ranking") +
   xlab("GDP") 
 p1
-# looks okay but could do with some logging perhaps of the GDP to make things more clear. 
+```
 
-# Pseudo logging the GDP and adding a geom_smooth line
+It looks okay but could do with some logging perhaps of the GDP to make things more clear. 
+
+Pseudo logging the GDP and adding a geom_smooth line
+```{r}
 p2 <- p1 + 
   scale_x_continuous(trans="pseudo_log") + 
-
     geom_smooth(method="glm")
-
+```
+```{r initial plot, echo=FALSE}
 p2
-# looks okay!
+```
 
-# Assessing the fit of a model:
-# Mod 1 is going to be the "Gaussian" or normally distributed:
+It looks okay!
+
+## Assessing the fit of a model:
+Mod 1 is going to be the "Gaussian" or normally distributed:
+```{r}
 mod1 <- glm(Rank ~ GDP,
                 data = GDP_And_Medals_Final,
                 family = "gaussian")
+```
 
-# Mod 2 is going to be the "poisson" type:
+Mod 2 is going to be the "poisson" type:
+```{r}
 mod2 <- glm(Rank ~ GDP,
             data = GDP_And_Medals_Final,
             family = "poisson")
-
-# Mod 3 is the Gaussian with the link being log:
+```
+Mod 3 is the Gaussian with the link being log:
+```{r}
 mod3 <- glm(Rank ~ GDP,
             data = GDP_And_Medals_Final,
             family = gaussian(link="log"))
-
-# Mod 4 is the Gaussian link with inverse link:
+```
+Mod 4 is the Gaussian link with inverse link:
+```{r}
 mod4 <- glm(Rank ~ GDP,
             data = GDP_And_Medals_Final,
             family = gaussian(link = "inverse"))
-
-
-# gettting library gamlr
+```
+Getting library gamlr
+```{r}
 library(gamlr)
+```
 
-# Comparing the models:
+Comparing the models:
+```{r}
 AIC_mods <- AIC(mod1,
                 mod2,
                 mod3,
                 mod4)
+```
 
-## rank them by AIC using the order() function
+Rank them by AIC using the order() function
+```{r}
 AIC_mods[order(AIC_mods$AIC),]
+```
+It looks as though model 4, the gaussian, link = inverse, is slightly better so lets check that out: 
 
-# It looks as though model 4, the gaussian, link = inverse, is slightly better so lets check that out: 
+## Investigating our model further: 
 
-# Now looking at mod4
-# create column of log predicted Gaussian
+Now looking at mod4
+Create column of log predicted Gaussian
+```{r}
 GDP_And_Medals_Final$pred_gaussian_log <- predict(mod4,
                                         type = "response")
+```
 
-#plotting the diagnostics plot for model 4
+Plotting the diagnostics plot for model 4
+```{r diagnostics, echo = FALSE}
 plot(mod4)
+```
 
-# creating a column for residual Gaussian log
+Creating a column for residual Gaussian log
+```{r}
 GDP_And_Medals_Final$resid_gaussian_log <- resid(mod4)
+```
 
-# plotting with the geom line for the predicted Gaussian log
+Plotting with the geom line for the predicted Gaussian log
+```{r predicted gaussian, echo = FALSE}
 p3 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
                                        y = Rank)) +
   geom_point() +
@@ -146,7 +203,10 @@ p3 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
   xlab("GDP") 
 
 p3
-#applying the model to the plot (method = glm)
+
+```
+Applying the model to the plot (method = glm)
+```{r mod 4 and the plot}
 p3 <-  p3 + 
   scale_x_continuous(trans="log") + 
   geom_smooth(method="glm") +
@@ -155,9 +215,16 @@ p3 <-  p3 +
   ggtitle( " Logged GDP Data")
 
 p3
-# I thought this was a good model. There is no residuals plotted but the data points are clear. 
-# Now having a look at the model summary:
+```
+I thought this was a good model. 
+There is no residuals plotted but the data points are clear. 
+
+Now having a look at the model summary:
+```{r}
 summary(mod3)
+```
+
+
 
 # This was the solution that you gave which I have adapted to my data:
 
@@ -179,8 +246,9 @@ plot(mod6)
 mod7 <- glm(log10(Rank) ~ log10(GDP), data=GDP_And_Medals_Final)
 plot(mod7)
 
-## So, is there an effect?
+ 
+ 
+So, is there an effect?
+```{r}
 summary(mod7)
-
-
-
+```

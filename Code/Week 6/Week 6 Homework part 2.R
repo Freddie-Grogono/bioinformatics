@@ -38,7 +38,7 @@ mod2 <- glm(Petal.Width ~ Petal.Length * Species,
 
 mod3 <- glm(Petal.Width ~ Petal.Length * Species, 
                   data = iris,
-                  family = "poisson")
+                  family = "poisson"))
 
 mod4 <- glm(Petal.Width ~ Petal.Length * Species,
                   data = iris,
