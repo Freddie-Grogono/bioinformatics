@@ -7,7 +7,8 @@ output: github_document
 ### Installing packages and data
 
 Installing tidyverse and vroom 
-```{r}
+
+```{r, echo = FALSE }
 library(tidyverse)
 library(vroom)
 ```
@@ -18,8 +19,9 @@ Tokyo_Data <- vroom("https://raw.githubusercontent.com/chrit88/Bioinformatics_da
 ```
 
 Install wbstats for access to the GDP data 
-```{r}
+
 install.packages("wbstats")
+```{r, include = FALSE}
 library(wbstats)
 ```
 
@@ -27,6 +29,7 @@ Renaming the column so it is nicer to look at and easier to understand
 ```{r}
 my_indicators = c("GDP" = "NY.GDP.MKTP.CD")
 ```
+
 Extract the GDP data for all countries
 ```{r}
 GDP_Raw <- wb_data(my_indicators, 
@@ -105,7 +108,8 @@ library(ggplot2)
 
 ## Plotting 
 Investigating an initial plot of medal ranking and GDP:
-```{r initial plot, echo=FALSE}
+
+```{r GDP_And_Medals_Final, echo=FALSE}
 p1 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
                                  y = Rank)) +
   geom_point() +
@@ -205,6 +209,7 @@ p3 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
 p3
 
 ```
+
 Applying the model to the plot (method = glm)
 ```{r mod 4 and the plot}
 p3 <-  p3 + 
@@ -216,6 +221,7 @@ p3 <-  p3 +
 
 p3
 ```
+
 I thought this was a good model. 
 There is no residuals plotted but the data points are clear. 
 
@@ -226,8 +232,8 @@ summary(mod3)
 
 
 
-# This was the solution that you gave which I have adapted to my data:
-
+## This was the solution that you gave which I have adapted to my data:
+```{r, echo = FALSE}
 p4 <- ggplot(GDP_And_Medals_Final, aes(x=GDP, y=Rank)) + 
   geom_point() + 
   scale_y_continuous(trans='log10') + 
@@ -236,19 +242,186 @@ p4 <- ggplot(GDP_And_Medals_Final, aes(x=GDP, y=Rank)) +
   ggtitle("Logged data")
   
 p4
+```
 
-## fit a model where neither the x or y are logged:
+Fit a model where neither the x or y are logged:
+```{r}
 mod6 <- glm(Rank ~ GDP, data=GDP_And_Medals_Final)
 plot(mod6)
-## DOESNT LOOK GOOD!
+```
+DOESNT LOOK GOOD!
 
-## fit a model where both the x and y are logged:
+Fit a model where both the x and y are logged:
+```{r}
 mod7 <- glm(log10(Rank) ~ log10(GDP), data=GDP_And_Medals_Final)
 plot(mod7)
-
- 
+```
  
 So, is there an effect?
 ```{r}
 summary(mod7)
 ```
+
+
+# Part 2 - Iris
+
+## Is there a positive effect of Petal.Length on Petal.Width? 
+
+```{r}
+data("iris")
+library(ggplot2)
+```
+
+Plotting the sepal widths so we can visualize if there are differences between the different species
+```{r, echo = FALSE}
+ggplot(iris, aes(x=Petal.Length, y=Petal.Width)) + 
+  geom_jitter(aes(col=Species)) +
+  theme_bw()
+```
+
+Petal length and petal width histograms:
+
+```{r}
+# 1. Petal Length Histogram
+a <- ggplot(iris, aes(x=Petal.Length,
+                  fill=Species)) +
+  geom_histogram(binwidth=.1, alpha=.5, position = "identity")
+  
+# 2.Petal Width Histogram
+  
+b <- ggplot(iris, aes(x=Petal.Width,
+                 fill=Species)) +
+  geom_histogram(binwidth=.1, alpha=.5, position = "identity")
+```
+
+```{r, figures-side, fig.show="hold", out.width="50%", echo = FALSE }
+a
+b
+```
+
+
+Generate and plot the model: 
+```{r echo = FALSE}
+mod1 <- glm(Petal.Width ~ Petal.Length * Species,
+                data = iris,
+                family = "gaussian")
+```
+
+Investigating the model:
+```{r}
+class(mod1)
+plot(mod1)
+summary(mod1)
+```
+
+Generating 3 other models:
+```{r, echo = FALSE}
+mod2 <- glm(Petal.Width ~ Petal.Length * Species,
+                  data = iris,
+                  family = gaussian(link = "log"))
+
+mod3 <- glm(Petal.Width ~ Petal.Length * Species, 
+                  data = iris,
+                  family = "poisson")
+
+mod4 <- glm(Petal.Width ~ Petal.Length * Species,
+                  data = iris,
+                  family = gaussian(link = "inverse"))
+```
+
+```{r, echo = FALSE}
+library(gamlr)
+```
+
+Comparing the models using the Akaike's Information Criterion (AIC)
+```{r, echo = FALSE}
+AIC_mods <- data.frame(model = c("mod1", "mod2", "mod3", "mod4"),
+                       AICc = c(AICc(mod1), AICc(mod2), AICc(mod3), AICc(mod4)))
+```
+
+Ranking them them by AIC using the order() function
+```{r}
+AIC_mods[order(AIC_mods$AICc),]
+```
+It looks as though model 1 is the most appropriate in this case. 
+
+Returning the predicted gaussian and residual gaussian and adding them as columns: 
+```{r}
+# predicted gaussian:
+iris$pred_gaussian <- predict(mod1,
+                                    type="response")
+
+# returning the residual gaussian: 
+iris$resid_gaussian <- resid(mod1)
+```
+
+## Making a plot
+```{r, echo = FALSE}
+plot_1 <- ggplot(data = iris, aes(x = Petal.Length,
+                              y = Petal.Width,
+                              col = Species)) +
+  geom_point() +
+  geom_smooth(data = iris,
+              method = glm) 
+
+
+plot_1
+```
+
+
+
+## Starting Again:
+
+```{r, echo = FALSE}
+data(iris)
+```
+
+Data vizualisation: 
+```{r}
+iris1 <- ggplot(iris, aes(x = Petal.Length, y = Petal.Width)) + 
+  geom_point(aes(col = Species)) +
+  theme_bw()
+
+iris1
+```
+
+```{r}
+iris1 + geom_smooth(aes(col = Species), method="lm")
+```
+
+Running model one 
+```{r, echo = FALSE}
+mod1 <- glm(Petal.Width ~ Petal.Length*Species, data = iris)
+```
+
+Set a 2x2 plot area, so we get a single pannel with 4 plots:
+```{r, echo = FALSE}
+par(mfrow = c(2, 2))
+```
+
+The qqplot looks a bit uneven
+```{r, echo = FALSE}
+plot(mod1)
+```
+
+What about square root?
+```{r, echo = FALSE}
+mod3 <- glm(sqrt(Petal.Width) ~ Petal.Length*Species, data = iris)
+```
+
+This looks much better:
+```{r}
+plot(mod3)
+
+summary(mod3)
+```
+
+
+
+
+
+
+
+
+
+
