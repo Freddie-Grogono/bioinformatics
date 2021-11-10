@@ -88,3 +88,8 @@ p3
 
 p_raw3 <- ggplot(data = raw_3, aes(x = x1, y = y)) + geom_line()
 p_raw3
+
+
+
+asdfasdfa
+
