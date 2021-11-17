@@ -15,7 +15,8 @@ raw_4 <- vroom("https://raw.githubusercontent.com/chrit88/Bioinformatics_data/ma
 
 ###############################################################################
 # Data Set: raw_1
-# X1
+
+    # X1
 mod_raw_1_x1_gaussian <- glm(y ~ x1, data = raw_1, family = "gaussian")
 mod_raw_1_x1_poisson <- glm(y ~ x1, data = raw_1, family = "poisson")
 mod_raw_1_x1_gaussian_log <- glm(y ~ x1, data = raw_1, family = gaussian(link = "log"))
@@ -28,10 +29,21 @@ AIC_mods_1 <- data.frame(model = c("mod_raw_1_x1_gaussian", "mod_raw_1_x1_poisso
 ## rank them by AIC using the order() function
 AIC_mods_1[order(AIC_mods_1$AICc),]
 
+# All of the models look identically ranked 
+plot(mod_raw_1_x1_gaussian)
+plot(mod_raw_1_x1_poisson)
+plot(mod_raw_1_x1_gaussian_log)
+plot(mod_raw_1_x1_gaussiahn_inverse)
+
+# Looking at all of the summary 
+summary(mod_raw_1_x1_gaussian) #x1 -0.0006235  0.0618441   -0.01    0.992  
+summary(mod_raw_1_x1_poisson)
+summary(mod_raw_1_x1_gaussian_log)
+summary(mod_1_gaussiahn_inverse)
 
 ###############################################################################
 
-# X2
+    # X2
 mod_raw_1_x2_gaussian <- glm(y ~ x2, data = raw_1, family = "gaussian")
 mod_raw_1_x2_poisson  <- glm(y ~ x2, data = raw_1, family = "poisson")
 mod_raw_1_x2_gaussian_log <- glm(y ~ x2, data = raw_1, family = gaussian(link = "log"))
@@ -43,9 +55,10 @@ AIC_mods_2 <- data.frame(model = c("mod_raw_1_x2_gaussian", "mod_raw_1_x2_poisso
 ## rank them by AIC using the order() function
 AIC_mods_2[order(AIC_mods_1$AICc),]
 
+
 ###############################################################################
 
-#X3
+    #X3
 mod_raw_1_x3_gaussian <- glm(y ~ x3, data = raw_1, family = "gaussian")
 mod_raw_1_x3_poisson  <- glm(y ~ x3, data = raw_1, family = "poisson")
 mod_raw_1_x3_gaussian_log <- glm(y ~ x3, data = raw_1, family = gaussian(link = "log"))
@@ -56,6 +69,8 @@ AIC_mods_3 <- data.frame(model = c("mod_raw_1_x3_gaussian", "mod_raw_1_x3_poisso
 
 ## rank them by AIC using the order() function
 AIC_mods_3[order(AIC_mods_1$AICc),]
+
+
 ###############################################################################
 
 #X4
@@ -70,26 +85,58 @@ AIC_mods_4 <- data.frame(model = c("mod_raw_1_x4_gaussian", "mod_raw_1_x4_poisso
 ## rank them by AIC using the order() function
 AIC_mods_4[order(AIC_mods_1$AICc),]
 
-library(patchwork)
 
-p1 <- ggplot(data = raw_1, aes(x = x1, y =y)) + 
-  geom_line()
-p2 <- ggplot(data = raw_1, aes(x = x2, y =y)) + 
-  geom_line()
-p3 <- ggplot(data = raw_1, aes(x = x3, y =y)) + 
-  geom_line()
-p4 <- ggplot(data = raw_1, aes(x = x4, y =y)) + 
-  geom_line()
+big_boy_glm <- glm(y ~ x1 + x2 + x3 + x4,
+                   data = raw_1,
+                   family = "gaussian") 
 
-p5 <- p1 + p2 + p3 + p4
-p5
+plot(big_boy_glm)
 
-p3
+# Decided to pivot the data and start investigating it that way instead: 
+pivot_raw_1 <- pivot_longer(data = raw_1, x1: x4, names_to = "response", values_to = "value") 
+raw_1_plot <- ggplot(data = pivot_raw_1, aes(x = value, y = y)) + geom_point(aes(col = response)) + geom_line()
 
-p_raw3 <- ggplot(data = raw_3, aes(x = x1, y = y)) + geom_line()
-p_raw3
+# Plotting a linear regression:
+mod_pivot_raw_1 <- glm(y ~ value,
+                ##specify the data
+                data = pivot_raw_1,
+                ##specify the error structure
+                family = "gaussian")
+mod_pivot_raw_1
+
+# Investigate the class of the model 
+class(mod_pivot_raw_1)
+
+# Setup the multi-panel plot 
+par(mfrow = c(2, 2))
+
+# have a look at the plots 
+plot(mod_pivot_raw_1)
+
+#Normal Q-Q plot does not look good at all 
+mod_1_gaussian <- glm(y ~ value, data = pivot_raw_1, family = "gaussian")
+mod_1_poisson <- glm(y ~ value, data = pivot_raw_1, family = "poisson")
+mod_1_gaussian_log <- glm(y ~ value, data = pivot_raw_1, family = gaussian(link = "log"))
+mod_1_gaussian_inverse <- glm(y ~ value, data = pivot_raw_1, family = gaussian(link = "inverse"))
+
+AIC_mods_1 <- data.frame(model = c("mod_1_gaussian", "mod_1_poisson", "mod_1_gaussian_log", "mod_1_gaussian_inverse"),
+                         AICc = c(AICc(mod_1_gaussian), AICc(mod_1_poisson), AICc(mod_1_gaussian_log), AICc(mod_1_gaussian_inverse)))
+AIC_mods_1[order(AIC_mods_1$AICc),]
+
+# Not sure this is actually doing the right thing! 
+
+raw_2_plot <- ggplot(data = raw_2, aes(x = , y = y)) + geom_point(aes(col = response)) + geom_line()
 
 
 
-asdfasdfa
+#############################################################################################
+
+# Data Set 2 
+
+pivot_raw_2 <- pivot_longer(data = raw_2, x1: x3, names_to = "response", values_to = "value") 
+raw_2_plot <- ggplot(data = pivot_raw_2, aes(x = value, y = y)) + geom_point(aes(col = response))
+raw_2_plot
+
+
+
 
