@@ -27,24 +27,39 @@ print(func(random_vector, 9))
 
 odds_even <- c(0,2,3,5,6,8,9)
 
-return_even <- function(x){
-  list <- c()
-  if(list(x %% 2) == 0
-     
-     
-     
-foreach num in x{
-  if((num %% 2) == 0)
-    list.append(num)
-  else
-}
-    
-
+# Task 2
 library(vroom)
+library(tidyverse)
 
-task2_df      
+task2_df <- vroom("https://raw.githubusercontent.com/PolCap/Teaching/master/Bristol/R%20Course/data/LivingPlanetIndex.csv")
+task2_df
+    
 
-    
-    
-    
+task2_df_long <- task2_df %>%
+  pivot_longer(cols = -c(ID:System),
+               names_to = c("date")
+)
+
+
+
+# What is the most recent year that the UK started monitoring a new population (according to the living planet index)?
+
+
+uk_filtered <- task2_df_long %>%
+  filter(Country == "United Kingdom")
+
+
+uk_filtered_nl <- task2_df %>%
+  filter(Country == "United Kingdom")
+
+
+
+# drop everything that has NULL in it 
+
+
+task2_df_long_no_null <- task2_df_long [task2_df_long == "NULL"] <- NA
+
+task2_df_long_no_null
+
+
     
