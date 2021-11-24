@@ -44,22 +44,39 @@ task2_df_long <- task2_df %>%
 
 # What is the most recent year that the UK started monitoring a new population (according to the living planet index)?
 
-
 uk_filtered <- task2_df_long %>%
   filter(Country == "United Kingdom")
 
+plot(uk_filtered)
 
 uk_filtered_nl <- task2_df %>%
   filter(Country == "United Kingdom")
 
-
-
 # drop everything that has NULL in it 
 
 
-task2_df_long_no_null <- task2_df_long [task2_df_long == "NULL"] <- NA
 
-task2_df_long_no_null
+# Task 3
+library(vroom)
+library(tidyverse)
+library(glmmTMB)
 
+fox <- vroom("https://raw.githubusercontent.com/PolCap/Teaching/master/Bristol/R%20Course/data/foxes.csv")
+fox
 
-    
+##fit a glm()
+
+f_mod1 <- glm(weight ~
+                avgfood +
+                groupsize +
+                area,
+              data = fox,
+              family = "gaussian"
+              )
+
+plot(f_mod1)    
+
+fox$pred_gaussian <- predict(f_mod1,
+                             )
+
+fox$resid <- 
