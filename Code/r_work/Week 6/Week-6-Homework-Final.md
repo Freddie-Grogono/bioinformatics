@@ -9,6 +9,9 @@ Week 6 Rmarkdown
 
 Installing tidyverse and vroom
 
+    ## Warning in as.POSIXlt.POSIXct(Sys.time()): unable to identify current timezone 'C':
+    ## please set environment variable 'TZ'
+
     ## -- Attaching packages --------------------------------------- tidyverse 1.3.1 --
 
     ## v ggplot2 3.3.5     v purrr   0.3.4
@@ -64,16 +67,16 @@ GDP_Raw
     ## # A tibble: 217 x 9
     ##    iso2c iso3c country     date       GDP unit  obs_status footnote last_updated
     ##    <chr> <chr> <chr>      <dbl>     <dbl> <chr> <chr>      <chr>    <date>      
-    ##  1 AW    ABW   Aruba       2020  NA       <NA>  <NA>       <NA>     2021-10-28  
-    ##  2 AF    AFG   Afghanist~  2020   1.98e10 <NA>  <NA>       <NA>     2021-10-28  
-    ##  3 AO    AGO   Angola      2020   6.23e10 <NA>  <NA>       <NA>     2021-10-28  
-    ##  4 AL    ALB   Albania     2020   1.48e10 <NA>  <NA>       <NA>     2021-10-28  
-    ##  5 AD    AND   Andorra     2020  NA       <NA>  <NA>       <NA>     2021-10-28  
-    ##  6 AE    ARE   United Ar~  2020  NA       <NA>  <NA>       <NA>     2021-10-28  
-    ##  7 AR    ARG   Argentina   2020   3.83e11 <NA>  <NA>       <NA>     2021-10-28  
-    ##  8 AM    ARM   Armenia     2020   1.26e10 <NA>  <NA>       <NA>     2021-10-28  
-    ##  9 AS    ASM   American ~  2020  NA       <NA>  <NA>       <NA>     2021-10-28  
-    ## 10 AG    ATG   Antigua a~  2020   1.42e 9 <NA>  <NA>       <NA>     2021-10-28  
+    ##  1 AW    ABW   Aruba       2020  NA       <NA>  <NA>       <NA>     2021-12-16  
+    ##  2 AF    AFG   Afghanist~  2020   2.01e10 <NA>  <NA>       <NA>     2021-12-16  
+    ##  3 AO    AGO   Angola      2020   5.84e10 <NA>  <NA>       <NA>     2021-12-16  
+    ##  4 AL    ALB   Albania     2020   1.49e10 <NA>  <NA>       <NA>     2021-12-16  
+    ##  5 AD    AND   Andorra     2020  NA       <NA>  <NA>       <NA>     2021-12-16  
+    ##  6 AE    ARE   United Ar~  2020   3.59e11 <NA>  <NA>       <NA>     2021-12-16  
+    ##  7 AR    ARG   Argentina   2020   3.89e11 <NA>  <NA>       <NA>     2021-12-16  
+    ##  8 AM    ARM   Armenia     2020   1.26e10 <NA>  <NA>       <NA>     2021-12-16  
+    ##  9 AS    ASM   American ~  2020   7.09e 8 <NA>  <NA>       <NA>     2021-12-16  
+    ## 10 AG    ATG   Antigua a~  2020   1.37e 9 <NA>  <NA>       <NA>     2021-12-16  
     ## # ... with 207 more rows
 
 ### Making it neater
@@ -90,16 +93,16 @@ GDP_Data
     ## # A tibble: 217 x 6
     ##    iso2c iso3c country               date           GDP last_updated
     ##    <chr> <chr> <chr>                <dbl>         <dbl> <date>      
-    ##  1 AW    ABW   Aruba                 2020           NA  2021-10-28  
-    ##  2 AF    AFG   Afghanistan           2020  19807067268. 2021-10-28  
-    ##  3 AO    AGO   Angola                2020  62306913444. 2021-10-28  
-    ##  4 AL    ALB   Albania               2020  14799615097. 2021-10-28  
-    ##  5 AD    AND   Andorra               2020           NA  2021-10-28  
-    ##  6 AE    ARE   United Arab Emirates  2020           NA  2021-10-28  
-    ##  7 AR    ARG   Argentina             2020 383066977654. 2021-10-28  
-    ##  8 AM    ARM   Armenia               2020  12645459214. 2021-10-28  
-    ##  9 AS    ASM   American Samoa        2020           NA  2021-10-28  
-    ## 10 AG    ATG   Antigua and Barbuda   2020   1415059259. 2021-10-28  
+    ##  1 AW    ABW   Aruba                 2020           NA  2021-12-16  
+    ##  2 AF    AFG   Afghanistan           2020  20116137326. 2021-12-16  
+    ##  3 AO    AGO   Angola                2020  58375976293. 2021-12-16  
+    ##  4 AL    ALB   Albania               2020  14887629268. 2021-12-16  
+    ##  5 AD    AND   Andorra               2020           NA  2021-12-16  
+    ##  6 AE    ARE   United Arab Emirates  2020 358868765175. 2021-12-16  
+    ##  7 AR    ARG   Argentina             2020 389288056265. 2021-12-16  
+    ##  8 AM    ARM   Armenia               2020  12641209802. 2021-12-16  
+    ##  9 AS    ASM   American Samoa        2020    709000000  2021-12-16  
+    ## 10 AG    ATG   Antigua and Barbuda   2020   1370281481. 2021-12-16  
     ## # ... with 207 more rows
 
 ``` r
@@ -108,8 +111,8 @@ GDP_Data
 
 ## Joining the two data sets:
 
-Now we need to join the so let’s rename one of the GDP\_Data rows for
-the join:
+Now we need to join the so let’s rename one of the GDP_Data rows for the
+join:
 
 ``` r
 GDP_Data_Final<- rename(GDP_Data, code = iso3c)
@@ -148,16 +151,16 @@ GDP_And_Medals_Raw
     ## # A tibble: 87 x 10
     ##    Country    Gold Silver Bronze code  iso2c country   date     GDP last_updated
     ##    <chr>     <dbl>  <dbl>  <dbl> <chr> <chr> <chr>    <dbl>   <dbl> <date>      
-    ##  1 United S~    39     41     33 USA   US    United ~  2020 2.09e13 2021-10-28  
-    ##  2 Republic~    38     32     18 CHN   CN    China     2020 1.47e13 2021-10-28  
-    ##  3 Japan        27     14     17 JPN   JP    Japan     2020 4.98e12 2021-10-28  
-    ##  4 Great Br~    22     21     22 GBR   GB    United ~  2020 2.71e12 2021-10-28  
-    ##  5 Russia       20     28     23 RUS   RU    Russian~  2020 1.48e12 2021-10-28  
-    ##  6 Australia    17      7     22 AUS   AU    Austral~  2020 1.33e12 2021-10-28  
-    ##  7 Germany      10     11     16 DEU   DE    Germany   2020 3.85e12 2021-10-28  
-    ##  8 Italy        10     10     20 ITA   IT    Italy     2020 1.89e12 2021-10-28  
-    ##  9 France       10     12     11 FRA   FR    France    2020 2.63e12 2021-10-28  
-    ## 10 Netherla~    10     12     14 NLD   NL    Netherl~  2020 9.14e11 2021-10-28  
+    ##  1 United S~    39     41     33 USA   US    United ~  2020 2.09e13 2021-12-16  
+    ##  2 Republic~    38     32     18 CHN   CN    China     2020 1.47e13 2021-12-16  
+    ##  3 Japan        27     14     17 JPN   JP    Japan     2020 5.06e12 2021-12-16  
+    ##  4 Great Br~    22     21     22 GBR   GB    United ~  2020 2.76e12 2021-12-16  
+    ##  5 Russia       20     28     23 RUS   RU    Russian~  2020 1.48e12 2021-12-16  
+    ##  6 Australia    17      7     22 AUS   AU    Austral~  2020 1.33e12 2021-12-16  
+    ##  7 Germany      10     11     16 DEU   DE    Germany   2020 3.85e12 2021-12-16  
+    ##  8 Italy        10     10     20 ITA   IT    Italy     2020 1.89e12 2021-12-16  
+    ##  9 France       10     12     11 FRA   FR    France    2020 2.63e12 2021-12-16  
+    ## 10 Netherla~    10     12     14 NLD   NL    Netherl~  2020 9.14e11 2021-12-16  
     ## # ... with 77 more rows
 
 Looks good although we now have NA values too
@@ -169,20 +172,20 @@ GDP_And_Medals_Final <- na.omit(GDP_And_Medals_Raw)
 GDP_And_Medals_Final
 ```
 
-    ## # A tibble: 80 x 10
+    ## # A tibble: 83 x 10
     ##    Country    Gold Silver Bronze code  iso2c country   date     GDP last_updated
     ##    <chr>     <dbl>  <dbl>  <dbl> <chr> <chr> <chr>    <dbl>   <dbl> <date>      
-    ##  1 United S~    39     41     33 USA   US    United ~  2020 2.09e13 2021-10-28  
-    ##  2 Republic~    38     32     18 CHN   CN    China     2020 1.47e13 2021-10-28  
-    ##  3 Japan        27     14     17 JPN   JP    Japan     2020 4.98e12 2021-10-28  
-    ##  4 Great Br~    22     21     22 GBR   GB    United ~  2020 2.71e12 2021-10-28  
-    ##  5 Russia       20     28     23 RUS   RU    Russian~  2020 1.48e12 2021-10-28  
-    ##  6 Australia    17      7     22 AUS   AU    Austral~  2020 1.33e12 2021-10-28  
-    ##  7 Germany      10     11     16 DEU   DE    Germany   2020 3.85e12 2021-10-28  
-    ##  8 Italy        10     10     20 ITA   IT    Italy     2020 1.89e12 2021-10-28  
-    ##  9 France       10     12     11 FRA   FR    France    2020 2.63e12 2021-10-28  
-    ## 10 Netherla~    10     12     14 NLD   NL    Netherl~  2020 9.14e11 2021-10-28  
-    ## # ... with 70 more rows
+    ##  1 United S~    39     41     33 USA   US    United ~  2020 2.09e13 2021-12-16  
+    ##  2 Republic~    38     32     18 CHN   CN    China     2020 1.47e13 2021-12-16  
+    ##  3 Japan        27     14     17 JPN   JP    Japan     2020 5.06e12 2021-12-16  
+    ##  4 Great Br~    22     21     22 GBR   GB    United ~  2020 2.76e12 2021-12-16  
+    ##  5 Russia       20     28     23 RUS   RU    Russian~  2020 1.48e12 2021-12-16  
+    ##  6 Australia    17      7     22 AUS   AU    Austral~  2020 1.33e12 2021-12-16  
+    ##  7 Germany      10     11     16 DEU   DE    Germany   2020 3.85e12 2021-12-16  
+    ##  8 Italy        10     10     20 ITA   IT    Italy     2020 1.89e12 2021-12-16  
+    ##  9 France       10     12     11 FRA   FR    France    2020 2.63e12 2021-12-16  
+    ## 10 Netherla~    10     12     14 NLD   NL    Netherl~  2020 9.14e11 2021-12-16  
+    ## # ... with 73 more rows
 
 Ordering the data set based on how the olympic medal table ranking
 works:
@@ -221,7 +224,7 @@ Investigating an initial plot of medal ranking and GDP:
 It looks okay but could do with some logging perhaps of the GDP to make
 things more clear.
 
-Pseudo logging the GDP and adding a geom\_smooth line
+Pseudo logging the GDP and adding a geom_smooth line
 
 ``` r
 p2 <- p1 + 
@@ -300,10 +303,10 @@ AIC_mods[order(AIC_mods$AIC),]
 ```
 
     ##      df       AIC
-    ## mod4  3  698.0834
-    ## mod3  3  698.1471
-    ## mod1  3  720.8704
-    ## mod2  2 1155.6795
+    ## mod4  3  731.4183
+    ## mod3  3  731.5383
+    ## mod1  3  754.2027
+    ## mod2  2 1242.2560
 
 It looks as though model 4, the gaussian, link = inverse, is slightly
 better so lets check that out:
@@ -361,20 +364,20 @@ summary(mod3)
     ## 
     ## Deviance Residuals: 
     ##     Min       1Q   Median       3Q      Max  
-    ## -33.929  -14.124    0.194   12.428   46.389  
+    ## -36.866  -14.805    0.904   12.977   47.710  
     ## 
     ## Coefficients:
     ##               Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)  3.969e+00  5.833e-02  68.038  < 2e-16 ***
-    ## GDP         -6.388e-13  1.652e-13  -3.867 0.000227 ***
+    ## (Intercept)  3.998e+00  5.766e-02  69.340  < 2e-16 ***
+    ## GDP         -6.442e-13  1.680e-13  -3.835 0.000247 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for gaussian family taken to be 343.5355)
+    ## (Dispersion parameter for gaussian family taken to be 375.3847)
     ## 
-    ##     Null deviance: 42660  on 79  degrees of freedom
-    ## Residual deviance: 26795  on 78  degrees of freedom
-    ## AIC: 698.15
+    ##     Null deviance: 47642  on 82  degrees of freedom
+    ## Residual deviance: 30406  on 81  degrees of freedom
+    ## AIC: 731.54
     ## 
     ## Number of Fisher Scoring iterations: 7
 
@@ -413,20 +416,20 @@ summary(mod7)
     ## 
     ## Deviance Residuals: 
     ##      Min        1Q    Median        3Q       Max  
-    ## -0.81121  -0.17601   0.00412   0.20745   0.62764  
+    ## -0.82625  -0.17531   0.01719   0.21434   0.62833  
     ## 
     ## Coefficients:
     ##             Estimate Std. Error t value Pr(>|t|)    
-    ## (Intercept)  5.19768    0.45962  11.309  < 2e-16 ***
-    ## log10(GDP)  -0.32929    0.04067  -8.097  6.1e-12 ***
+    ## (Intercept)  5.17119    0.45305  11.414  < 2e-16 ***
+    ## log10(GDP)  -0.32620    0.04016  -8.122 4.32e-12 ***
     ## ---
     ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
     ## 
-    ## (Dispersion parameter for gaussian family taken to be 0.08728669)
+    ## (Dispersion parameter for gaussian family taken to be 0.0888732)
     ## 
-    ##     Null deviance: 12.5314  on 79  degrees of freedom
-    ## Residual deviance:  6.8084  on 78  degrees of freedom
-    ## AIC: 35.92
+    ##     Null deviance: 13.0614  on 82  degrees of freedom
+    ## Residual deviance:  7.1987  on 81  degrees of freedom
+    ## AIC: 38.614
     ## 
     ## Number of Fisher Scoring iterations: 2
 

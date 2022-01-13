@@ -1,0 +1,427 @@
+---
+title: "Week 6 Rmarkdown"
+output: github_document
+---
+# Part 1 - Tokyo Olympics
+## Is there a significant effect of a country's GDP on their position in the Olympics?
+### Installing packages and data
+
+Installing tidyverse and vroom 
+
+```{r, echo = FALSE }
+library(tidyverse)
+library(vroom)
+```
+
+Install the Tokyo Medals Data:
+```{r}
+Tokyo_Data <- vroom("https://raw.githubusercontent.com/chrit88/Bioinformatics_data/master/Workshop%205/Tokyo%202021%20medals.csv")
+```
+
+Install wbstats for access to the GDP data 
+
+install.packages("wbstats")
+```{r, include = FALSE}
+library(wbstats)
+```
+
+Renaming the column so it is nicer to look at and easier to understand 
+```{r}
+my_indicators = c("GDP" = "NY.GDP.MKTP.CD")
+```
+
+Extract the GDP data for all countries
+```{r}
+GDP_Raw <- wb_data(my_indicators, 
+                    start_date = 2020,
+                    end_date = 2020)
+```
+Having a look at the data
+```{r}
+GDP_Raw
+```
+
+### Making it neater
+It seems as though there are some columns we won't need, so let us get rid of those: 
+Getting rid of useless columns from the data set: 
+```{r}
+GDP_Data <- subset(GDP_Raw, select = c(1, 2, 3, 4, 5, 9))
+# Have a look
+GDP_Data
+# Yay it worked! 
+```
+
+## Joining the two data sets: 
+
+Now we need to join the so let's rename one of the GDP_Data rows for the join:
+```{r}
+GDP_Data_Final<- rename(GDP_Data, code = iso3c)
+```
+
+Adding a column to Tokyo Data containing country code:
+```{r}
+library(countrycode)
+```
+
+Adding the iso3c column to the Tokyo Data enabling joining later on:
+```{r}
+Tokyo_Data$code <- countrycode(Tokyo_Data$Country, 
+                                  origin = "country.name", 
+                                  destination = "iso3c")
+```
+
+Giving China the CHN
+```{r}
+Tokyo_Data$code <- sub("TWN", "CHN", Tokyo_Data$code)
+Tokyo_Data$code[42] <- "TWN"
+```
+
+Joining the data using inner join :
+```{r}
+GDP_And_Medals_Raw <- inner_join(Tokyo_Data, GDP_Data_Final, by = "code")
+GDP_And_Medals_Raw
+```
+Looks good although we now have NA values too 
+
+Remove all of the NA values 
+```{r}
+GDP_And_Medals_Final <- na.omit(GDP_And_Medals_Raw)
+GDP_And_Medals_Final
+```
+Ordering the data set based on how the olympic medal table ranking works: 
+```{r}
+GDP_And_Medals_Final <-GDP_And_Medals_Final[order(-GDP_And_Medals_Final$Gold, -GDP_And_Medals_Final$Silver, -GDP_And_Medals_Final$Bronze),]
+```
+
+Using the index to give the countries a Rank:
+```{r}
+GDP_And_Medals_Final <- tibble::rowid_to_column(GDP_And_Medals_Final, "Rank")
+```
+
+### Getting ready to plot 
+install the ggplot2 package
+```{r}
+install.packages("ggplot2")
+# Use the ggplot 2 library 
+library(ggplot2)
+```
+
+## Plotting 
+Investigating an initial plot of medal ranking and GDP:
+
+```{r GDP_And_Medals_Final, echo=FALSE}
+p1 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
+                                 y = Rank)) +
+  geom_point() +
+  theme_bw() +
+  ylab("Medal Ranking") +
+  xlab("GDP") 
+p1
+```
+
+It looks okay but could do with some logging perhaps of the GDP to make things more clear. 
+
+Pseudo logging the GDP and adding a geom_smooth line
+```{r}
+p2 <- p1 + 
+  scale_x_continuous(trans="pseudo_log") + 
+    geom_smooth(method="glm")
+```
+```{r initial plot, echo=FALSE}
+p2
+```
+
+It looks okay!
+
+## Assessing the fit of a model:
+Mod 1 is going to be the "Gaussian" or normally distributed:
+```{r}
+mod1 <- glm(Rank ~ GDP,
+                data = GDP_And_Medals_Final,
+                family = "gaussian")
+```
+
+Mod 2 is going to be the "poisson" type:
+```{r}
+mod2 <- glm(Rank ~ GDP,
+            data = GDP_And_Medals_Final,
+            family = "poisson")
+```
+Mod 3 is the Gaussian with the link being log:
+```{r}
+mod3 <- glm(Rank ~ GDP,
+            data = GDP_And_Medals_Final,
+            family = gaussian(link="log"))
+```
+Mod 4 is the Gaussian link with inverse link:
+```{r}
+mod4 <- glm(Rank ~ GDP,
+            data = GDP_And_Medals_Final,
+            family = gaussian(link = "inverse"))
+```
+Getting library gamlr
+```{r}
+library(gamlr)
+```
+
+Comparing the models:
+```{r}
+AIC_mods <- AIC(mod1,
+                mod2,
+                mod3,
+                mod4)
+```
+
+Rank them by AIC using the order() function
+```{r}
+AIC_mods[order(AIC_mods$AIC),]
+```
+It looks as though model 4, the gaussian, link = inverse, is slightly better so lets check that out: 
+
+## Investigating our model further: 
+
+Now looking at mod4
+Create column of log predicted Gaussian
+```{r}
+GDP_And_Medals_Final$pred_gaussian_log <- predict(mod4,
+                                        type = "response")
+```
+
+Plotting the diagnostics plot for model 4
+```{r diagnostics, echo = FALSE}
+plot(mod4)
+```
+
+Creating a column for residual Gaussian log
+```{r}
+GDP_And_Medals_Final$resid_gaussian_log <- resid(mod4)
+```
+
+Plotting with the geom line for the predicted Gaussian log
+```{r predicted gaussian, echo = FALSE}
+p3 <- ggplot(GDP_And_Medals_Final, aes(x = GDP,
+                                       y = Rank)) +
+  geom_point() +
+  theme_bw() +
+  ylab("Medal Ranking") +
+  xlab("GDP") 
+
+p3
+
+```
+
+Applying the model to the plot (method = glm)
+```{r mod 4 and the plot}
+p3 <-  p3 + 
+  scale_x_continuous(trans="log") + 
+  geom_smooth(method="glm") +
+  xlab("Medal Ranking") +
+  ylab("log_GDP") +
+  ggtitle( " Logged GDP Data")
+
+p3
+```
+
+I thought this was a good model. 
+There is no residuals plotted but the data points are clear. 
+
+Now having a look at the model summary:
+```{r}
+summary(mod3)
+```
+
+
+
+## This was the solution that you gave which I have adapted to my data:
+```{r, echo = FALSE}
+p4 <- ggplot(GDP_And_Medals_Final, aes(x=GDP, y=Rank)) + 
+  geom_point() + 
+  scale_y_continuous(trans='log10') + 
+  scale_x_continuous(trans='log10') + 
+  theme_bw() +
+  ggtitle("Logged data")
+  
+p4
+```
+
+Fit a model where neither the x or y are logged:
+```{r}
+mod6 <- glm(Rank ~ GDP, data=GDP_And_Medals_Final)
+plot(mod6)
+```
+DOESNT LOOK GOOD!
+
+Fit a model where both the x and y are logged:
+```{r}
+mod7 <- glm(log10(Rank) ~ log10(GDP), data=GDP_And_Medals_Final)
+plot(mod7)
+```
+ 
+So, is there an effect?
+```{r}
+summary(mod7)
+```
+
+
+# Part 2 - Iris
+
+## Is there a positive effect of Petal.Length on Petal.Width? 
+
+```{r}
+data("iris")
+library(ggplot2)
+```
+
+Plotting the sepal widths so we can visualize if there are differences between the different species
+```{r, echo = FALSE}
+ggplot(iris, aes(x=Petal.Length, y=Petal.Width)) + 
+  geom_jitter(aes(col=Species)) +
+  theme_bw()
+```
+
+Petal length and petal width histograms:
+
+```{r}
+# 1. Petal Length Histogram
+a <- ggplot(iris, aes(x=Petal.Length,
+                  fill=Species)) +
+  geom_histogram(binwidth=.1, alpha=.5, position = "identity")
+  
+# 2.Petal Width Histogram
+  
+b <- ggplot(iris, aes(x=Petal.Width,
+                 fill=Species)) +
+  geom_histogram(binwidth=.1, alpha=.5, position = "identity")
+```
+
+```{r, figures-side, fig.show="hold", out.width="50%", echo = FALSE }
+a
+b
+```
+
+
+Generate and plot the model: 
+```{r echo = FALSE}
+mod1 <- glm(Petal.Width ~ Petal.Length * Species,
+                data = iris,
+                family = "gaussian")
+```
+
+Investigating the model:
+```{r}
+class(mod1)
+plot(mod1)
+summary(mod1)
+```
+
+Generating 3 other models:
+```{r, echo = FALSE}
+mod2 <- glm(Petal.Width ~ Petal.Length * Species,
+                  data = iris,
+                  family = gaussian(link = "log"))
+
+mod3 <- glm(Petal.Width ~ Petal.Length * Species, 
+                  data = iris,
+                  family = "poisson")
+
+mod4 <- glm(Petal.Width ~ Petal.Length * Species,
+                  data = iris,
+                  family = gaussian(link = "inverse"))
+```
+
+```{r, echo = FALSE}
+library(gamlr)
+```
+
+Comparing the models using the Akaike's Information Criterion (AIC)
+```{r, echo = FALSE}
+AIC_mods <- data.frame(model = c("mod1", "mod2", "mod3", "mod4"),
+                       AICc = c(AICc(mod1), AICc(mod2), AICc(mod3), AICc(mod4)))
+```
+
+Ranking them them by AIC using the order() function
+```{r}
+AIC_mods[order(AIC_mods$AICc),]
+```
+It looks as though model 1 is the most appropriate in this case. 
+
+Returning the predicted gaussian and residual gaussian and adding them as columns: 
+```{r}
+# predicted gaussian:
+iris$pred_gaussian <- predict(mod1,
+                                    type="response")
+
+# returning the residual gaussian: 
+iris$resid_gaussian <- resid(mod1)
+```
+
+## Making a plot
+```{r, echo = FALSE}
+plot_1 <- ggplot(data = iris, aes(x = Petal.Length,
+                              y = Petal.Width,
+                              col = Species)) +
+  geom_point() +
+  geom_smooth(data = iris,
+              method = glm) 
+
+
+plot_1
+```
+
+
+
+## Starting Again:
+
+```{r, echo = FALSE}
+data(iris)
+```
+
+Data vizualisation: 
+```{r}
+iris1 <- ggplot(iris, aes(x = Petal.Length, y = Petal.Width)) + 
+  geom_point(aes(col = Species)) +
+  theme_bw()
+
+iris1
+```
+
+```{r}
+iris1 + geom_smooth(aes(col = Species), method="lm")
+```
+
+Running model one 
+```{r, echo = FALSE}
+mod1 <- glm(Petal.Width ~ Petal.Length*Species, data = iris)
+```
+
+Set a 2x2 plot area, so we get a single pannel with 4 plots:
+```{r, echo = FALSE}
+par(mfrow = c(2, 2))
+```
+
+The qqplot looks a bit uneven
+```{r, echo = FALSE}
+plot(mod1)
+```
+
+What about square root?
+```{r, echo = FALSE}
+mod3 <- glm(sqrt(Petal.Width) ~ Petal.Length*Species, data = iris)
+```
+
+This looks much better:
+```{r}
+plot(mod3)
+
+summary(mod3)
+```
+
+
+
+
+
+
+
+
+
+
