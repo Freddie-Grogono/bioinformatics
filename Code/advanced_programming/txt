@@ -1,0 +1,21 @@
+### Hello
+This is week 1 Advanced Programming Notes
+You're learning how to do C++ and its really hard lol 
+
+- g++ ... will compile your file and 
+- // enables you to comment or /* asdfasdf *>
+
+ Python                  || C++
+ interpreted/interactive || compiled to binary 
+ duck types              || strict types
+ whitespace              || {} curlies 
+ import                  || #include 
+
+
+### Loops in C++
+ for ( initialise ; condition ; increment )
+{
+    //code that should be run
+}
+
+
